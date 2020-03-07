@@ -1,0 +1,1 @@
+ffmpeg -ss 00:00:10 -i v.mkv -t 00:00:10 -c:v copy -c:a copy split.mkv
