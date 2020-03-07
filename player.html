@@ -8,6 +8,8 @@
     }
 </style>
 
+<p id="asd">asd</p>
+
 <video id="player1" src="noise_transcoded/00.mp4" controls preload></video><!--
 
 --><video id="player2" src="noise_transcoded/01.mp4" controls preload></video>
@@ -19,19 +21,71 @@
     var vid1 = document.getElementById("player1")
     var vid2 = document.getElementById("player2")
     nextvideo = 2
-    $('#player1').on('ended',function(){
-        vid2.play()
-        vid1.src = 'noise_transcoded/' + pad(nextvideo) + '.mp4'
-        nextvideo += 1
-        console.log(nextvideo)
+    currentPlayer = 1
+    
+/*     $('#player1').on('ended',function(){
+        switchPlayer()
     });
 
     $('#player2').on('ended',function(){
-        vid1.play()
-        vid2.src = 'noise_transcoded/' + pad(nextvideo) + '.mp4'
+        switchPlayer()
+    }); */
+
+    function switchPlayer() {
+        if (currentPlayer == 1) {
+            vid2.play()
+            setTimeout(function(){
+                vid1.src = 'noise_transcoded/' + pad(nextvideo) + '.mp4'
+            }, 1000);
+            currentPlayer = 2
+        } else {
+            vid1.play()
+            setTimeout(function(){
+                vid2.src = 'noise_transcoded/' + pad(nextvideo) + '.mp4'
+            }, 1000);
+            currentPlayer = 1
+        }
+
         nextvideo += 1
-        console.log(nextvideo)
+    }
+
+
+
+    const interval = setInterval(function() {
+        if (currentPlayer == 1) {
+            player = vid1
+        } else {
+            player = vid2
+        }
+        
+        remain = player.duration - player.currentTime
+        remRound = Math.round(remain * 1000) / 1000
+        $('#asd').html(remRound)
+        if (remain < 0.3) {
+            switchPlayer()
+        }
+    }, 10);
+
+    // clearInterval(interval);
+
+
+    /* $('#player1').bind('timeupdate', function() {
+        var video = $(this).get(0);
+        var iNow = video.currentTime;
+        var countdown = video.duration - iNow;
+        if (countdown <= 0.5) {
+            switchTo2()
+        }
     });
+
+    $('#player2').bind('timeupdate', function() {
+        var video = $(this).get(0);
+        var iNow = video.currentTime;
+        var countdown = video.duration - iNow;
+        if (countdown <= 0.2) {
+            switchTo1()
+        }
+    }); */
 
 
     function pad(d) {
