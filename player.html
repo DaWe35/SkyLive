@@ -1,0 +1,41 @@
+<style>
+    body {
+        margin: 0;
+    }
+    video {
+        width: 50%;
+        display: inline-block;
+    }
+</style>
+
+<video id="player1" src="noise_transcoded/00.mp4" controls preload></video><!--
+
+--><video id="player2" src="noise_transcoded/01.mp4" controls preload></video>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+<script>
+    var vid1 = document.getElementById("player1")
+    var vid2 = document.getElementById("player2")
+    nextvideo = 2
+    $('#player1').on('ended',function(){
+        vid2.play()
+        vid1.src = 'noise_transcoded/' + pad(nextvideo) + '.mp4'
+        nextvideo += 1
+        console.log(nextvideo)
+    });
+
+    $('#player2').on('ended',function(){
+        vid1.play()
+        vid2.src = 'noise_transcoded/' + pad(nextvideo) + '.mp4'
+        nextvideo += 1
+        console.log(nextvideo)
+    });
+
+
+    function pad(d) {
+        return (d < 10) ? '0' + d.toString() : d.toString();
+    }
+
+</script>
