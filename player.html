@@ -3,24 +3,29 @@
         margin: 0;
     }
     video {
-        width: 50%;
+        width: 100%;
         display: inline-block;
+    }
+
+    #player2 {
+        display: none;
     }
 </style>
 
+<video id="player1" src="noisecopy/0.mp4" controls preload></video><!--
+
+--><video id="player2" src="noisecopy/1.mp4" controls preload></video>
+
 <p id="asd">asd</p>
-
-<video id="player1" src="noise_transcoded/00.mp4" controls preload></video><!--
-
---><video id="player2" src="noise_transcoded/01.mp4" controls preload></video>
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
 <script>
-    var vid1 = document.getElementById("player1")
-    var vid2 = document.getElementById("player2")
-    nextvideo = 2
+    let switchWindow = 0.1
+
+    let vid1 = document.getElementById("player1")
+    let vid2 = document.getElementById("player2")
+    nextvideo = 1
     currentPlayer = 1
     
 /*     $('#player1').on('ended',function(){
@@ -35,20 +40,27 @@
         if (currentPlayer == 1) {
             vid2.play()
             setTimeout(function(){
-                vid1.src = 'noise_transcoded/' + pad(nextvideo) + '.mp4'
+                vid1.src = 'noisecopy/' + nextvideo + '.mp4'
             }, 1000);
+            setTimeout(function(){
+                vid2.style.display = 'inline-block'
+                vid1.style.display = 'none'
+            }, switchWindow-10);
             currentPlayer = 2
         } else {
             vid1.play()
             setTimeout(function(){
-                vid2.src = 'noise_transcoded/' + pad(nextvideo) + '.mp4'
+                vid2.src = 'noisecopy/' + nextvideo + '.mp4'
             }, 1000);
+            setTimeout(function(){
+                vid1.style.display = 'inline-block'
+                vid2.style.display = 'none'
+            }, switchWindow-10);
             currentPlayer = 1
         }
 
         nextvideo += 1
     }
-
 
 
     const interval = setInterval(function() {
@@ -61,7 +73,7 @@
         remain = player.duration - player.currentTime
         remRound = Math.round(remain * 1000) / 1000
         $('#asd').html(remRound)
-        if (remain < 0.3) {
+        if (remain <= switchWindow) {
             switchPlayer()
         }
     }, 10);
