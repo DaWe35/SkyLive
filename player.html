@@ -22,9 +22,19 @@
 
 <script>
     let switchWindow = 0.1
+    let playlist = [
+        "https://siasky.net/AAAnt4un2IaxNe6ryH3CCsDlEKAp1oXy56X9gDQbttLhbQ",
+        "https://siasky.net/AABVcsujwj2nJkmpyEPBjSav8h2elfht_JqkR9dVAdaLXw",
+        "https://siasky.net/AAAOUcbegQxw16D2bl721EC9IAy5w5zcj47FPFix5huLVA",
+        "https://siasky.net/AADV9wTOt4GXzeBOptlfPIJl5esx3qOxW6VSLhRD9t0kVQ",
+        "https://siasky.net/AACtV12w_umhvA8FNMHOzqsd4nlOlwo7I-7CH3fhoRp11Q",
+        "https://siasky.net/AACKa_NJPJ1S9wzN-C7rq_tov5GEL5bumZlrtnjxOSGydA",
+    ]
 
     let vid1 = document.getElementById("player1")
     let vid2 = document.getElementById("player2")
+    vid1.src = playlist[0]
+    vid2.src = playlist[1]
     nextvideo = 1
     currentPlayer = 1
     
@@ -40,7 +50,7 @@
         if (currentPlayer == 1) {
             vid2.play()
             setTimeout(function(){
-                vid1.src = 'noisecopy/' + nextvideo + '.mp4'
+                vid1.src = playlist[nextvideo]
             }, 1000);
             setTimeout(function(){
                 vid2.style.display = 'inline-block'
@@ -50,7 +60,7 @@
         } else {
             vid1.play()
             setTimeout(function(){
-                vid2.src = 'noisecopy/' + nextvideo + '.mp4'
+                vid2.src = playlist[nextvideo]
             }, 1000);
             setTimeout(function(){
                 vid1.style.display = 'inline-block'
