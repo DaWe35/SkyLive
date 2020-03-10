@@ -9,6 +9,7 @@ import logging
 import shutil
 import config
 import json
+import threading
 def blockPrint():
 	sys.stdout = open(os.devnull, 'w')
 def enablePrint():
@@ -22,7 +23,9 @@ def runBash(command):
 	print(command)
 	os.system(command)
 
-def touchDir(dir):
+def touchDir(dir, strict = False):
+	if (strict == True and os.path.isdir(dir)):
+		raise Exception('Folder already exists: ' + dir)
 	if not os.path.isdir(dir):
 		os.mkdir(dir)
 
@@ -49,17 +52,24 @@ def sendSocket(data):
 	ws.close()
 	print('Ws success')
 
-sendSocket('https://siasky.net/_A5NhO8z0_MSY1brZ9w6QTzUvxoGlVwYwBMHyqK87-Fj6w')
-exit(0)
+def share(saveTo):
+	print('Uploading...')
+	skylink = Skynet.upload_file(saveTo)
+	siaskylink = skylink.replace("sia://", "")
+	siaskylink = 'https://siasky.net/' + siaskylink
+	sendSocket(siaskylink)
+
 projectPath = r'C:\Wamp.NET\sites\archive\Skylive'
-recordVideo = r'C:\Users\Hp\Videos\2020-03-10 15-45-48.flv'
+if (len(sys.argv) != 2):
+	raise Exception('Please enter one argunemt: livestream flv path')
+recordVideo = sys.argv[1]
 streamedTime = 0
 nextStreamFilename = 0
 
 segmentsPath = os.path.join(projectPath, "segments")
 convertedPath = os.path.join(projectPath, "converted")
 rmdir(segmentsPath)
-touchDir(convertedPath)
+touchDir(convertedPath, True)
 
 
 def searchFor10sSums(segmentToUse):
@@ -92,7 +102,8 @@ while True:
 	touchDir(segmentsPath)
 	saveTo = os.path.join(segmentsPath, "%d.mp4")
 	runBash('ffmpeg -loglevel panic -ss ' + str(streamedTime) + ' -i "' + recordVideo + '" -acodec copy -f segment -vcodec copy -reset_timestamps 1 -map 0 "' + saveTo + '"')
-	
+	print('prev ffmpeg finished')
+
 	nextSegmentToUse = 0
 	while True:
 		chunks = searchFor10sSums(nextSegmentToUse)
@@ -102,6 +113,8 @@ while True:
 		nextSegmentToUse = chunks[1]
 		saveTo = os.path.join(convertedPath, str(nextStreamFilename) + '.mp4')
 		runBash('ffmpeg -loglevel panic -f concat -safe 0 -i concat.txt -c copy ' + saveTo)
+		x = threading.Thread(target=share, args=(saveTo,))
+		x.start()
 		streamedTime += segmentSum
 		nextStreamFilename += 1
 

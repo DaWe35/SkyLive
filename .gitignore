@@ -4,3 +4,4 @@
 /config.py
 /server/config.php
 /server/vendor
+/__pycache__
