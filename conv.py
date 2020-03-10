@@ -1,3 +1,4 @@
+from websocket import create_connection
 import os
 from siaskynet import Skynet
 from datetime import datetime as dt
@@ -6,6 +7,8 @@ import time
 import sys, os
 import logging
 import shutil
+import config
+import json
 def blockPrint():
 	sys.stdout = open(os.devnull, 'w')
 def enablePrint():
@@ -27,6 +30,25 @@ def rmdir(dir):
 	if os.path.isdir(dir):
 		shutil.rmtree(dir)
 
+def sendSocket(data):
+	ws = create_connection('ws://' + config.websocket_ip + ':' + config.websocket_port)
+	jdata = {
+		"password": config.websocket_password,
+		"data": data
+	}
+	jdata = json.dumps(jdata)
+	status = ws.send(jdata)
+	print('Ws send, wait for answer')
+	result =  ws.recv()
+	if (result == 'wrong_pass'):
+		raise Exception('Wrong websocket password set in config.py')
+	elif (result != data):
+		raise Exception('Websocket send failed. Unexpected error')
+	ws.close()
+	print('Ws success')
+
+sendSocket('asd')
+exit(0)
 projectPath = r'C:\Wamp.NET\sites\archive\Skylive'
 recordVideo = r'C:\Users\Hp\Videos\2020-03-10 15-45-48.flv'
 streamedTime = 0

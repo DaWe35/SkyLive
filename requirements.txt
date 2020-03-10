@@ -1,0 +1,4 @@
+moviepy
+opencv_python
+siaskynet
+websocket-client
