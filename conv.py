@@ -40,14 +40,16 @@ def sendSocket(data):
 	status = ws.send(jdata)
 	print('Ws send, wait for answer')
 	result =  ws.recv()
-	if (result == 'wrong_pass'):
+	result1 =  ws.recv()
+	result2 =  ws.recv()
+	if (result == 'wrong_pass' or result1 == 'wrong_pass' or result2 == 'wrong_pass'):
 		raise Exception('Wrong websocket password set in config.py')
-	elif (result != data):
-		raise Exception('Websocket send failed. Unexpected error')
+	elif (result != data and result1 != data and result2 != data):
+		raise Exception('Websocket send failed. Unexpected error: ' + result)
 	ws.close()
 	print('Ws success')
 
-sendSocket('asd')
+sendSocket('https://siasky.net/_A5NhO8z0_MSY1brZ9w6QTzUvxoGlVwYwBMHyqK87-Fj6w')
 exit(0)
 projectPath = r'C:\Wamp.NET\sites\archive\Skylive'
 recordVideo = r'C:\Users\Hp\Videos\2020-03-10 15-45-48.flv'

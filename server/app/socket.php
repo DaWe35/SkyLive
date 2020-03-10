@@ -8,6 +8,8 @@ class Socket implements MessageComponentInterface {
     public function __construct() {
         $this->clients = new \SplObjectStorage;
         $this->connectionCount = 0;
+        $this->last = '';
+        $this->last_1 = '';
     }
 
     public function onOpen(ConnectionInterface $conn) {
@@ -15,11 +17,19 @@ class Socket implements MessageComponentInterface {
         $this->clients->attach($conn);        
         $this->connectionCount += 1;
         echo "{$this->connectionCount} peers, new connection: {$conn->resourceId}\n";
+        foreach ( $this->clients as $client ) {
+            if ( $conn->resourceId == $client->resourceId ) {
+                $client->send( $this->last_1 );
+                $client->send( $this->last );
+            }
+        }
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
         $msg = json_decode($msg, true);
         if ($msg['password'] == socketPassword) {
+            $this->last_1 = $this->last;
+            $this->last = $msg['data'];
             echo $msg['data'] . "\n";
             foreach ( $this->clients as $client ) {
                 $client->send( $msg['data'] );

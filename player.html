@@ -10,47 +10,71 @@
     #player2 {
         display: none;
     }
+
+    #counter {
+        display: none;
+    }
+
+    /* DEV MODE */
+    body.devmode {
+        background-color: rgb(92, 96, 99);
+    }
+
+    .devmode video {
+        width: 50%;
+    }
+
+    .devmode #player2, body.devmode #player1 {
+        display: inline-block !important;
+    }
+
+    .devmode #counter {
+        display: inherit;
+    }
 </style>
 
 <video id="player1" src="noisecopy/0.mp4" controls preload></video><!--
 
 --><video id="player2" src="noisecopy/1.mp4" controls preload></video>
 
-<p id="asd">asd</p>
+<button onclick="switchDevMode()">Dev mode</button>
+
+<p id="counter">asd</p>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
 <script>
     let switchWindow = 0.1
-    let playlist = [
-        "https://siasky.net/AAAnt4un2IaxNe6ryH3CCsDlEKAp1oXy56X9gDQbttLhbQ",
-        "https://siasky.net/AABVcsujwj2nJkmpyEPBjSav8h2elfht_JqkR9dVAdaLXw",
-        "https://siasky.net/AAAOUcbegQxw16D2bl721EC9IAy5w5zcj47FPFix5huLVA",
-        "https://siasky.net/AADV9wTOt4GXzeBOptlfPIJl5esx3qOxW6VSLhRD9t0kVQ",
-        "https://siasky.net/AACtV12w_umhvA8FNMHOzqsd4nlOlwo7I-7CH3fhoRp11Q",
-        "https://siasky.net/AACKa_NJPJ1S9wzN-C7rq_tov5GEL5bumZlrtnjxOSGydA",
-    ]
+
+    var queue = [];
+    var socket = new WebSocket("ws://localhost:8080");
+    startPush = 0
+    socket.onmessage = function (event) {
+        console.log('websocket: ' + event.data)
+        queue.push(event.data);
+        startPush += 1
+        if (startPush == 2) {
+            vid1.src = queue.shift()
+            vid2.src = queue.shift()
+        }
+    }
+
 
     let vid1 = document.getElementById("player1")
     let vid2 = document.getElementById("player2")
-    vid1.src = playlist[0]
-    vid2.src = playlist[1]
-    nextvideo = 1
     currentPlayer = 1
-    
-/*     $('#player1').on('ended',function(){
-        switchPlayer()
-    });
-
-    $('#player2').on('ended',function(){
-        switchPlayer()
-    }); */
+    devmode = 0
 
     function switchPlayer() {
+        if (queue.length == 0) {
+            vid1.pause()
+            vid2.pause()
+            return
+        }
         if (currentPlayer == 1) {
             vid2.play()
             setTimeout(function(){
-                vid1.src = playlist[nextvideo]
+                vid1.src = queue.shift()
             }, 1000);
             setTimeout(function(){
                 vid2.style.display = 'inline-block'
@@ -60,7 +84,7 @@
         } else {
             vid1.play()
             setTimeout(function(){
-                vid2.src = playlist[nextvideo]
+                vid2.src = queue.shift()
             }, 1000);
             setTimeout(function(){
                 vid1.style.display = 'inline-block'
@@ -68,8 +92,6 @@
             }, switchWindow-10);
             currentPlayer = 1
         }
-
-        nextvideo += 1
     }
 
 
@@ -81,37 +103,24 @@
         }
         
         remain = player.duration - player.currentTime
-        remRound = Math.round(remain * 1000) / 1000
-        $('#asd').html(remRound)
         if (remain <= switchWindow) {
             switchPlayer()
         }
+
+        if (devmode) {
+            remRound = Math.round(remain * 1000) / 1000
+            $('#asd').html(remRound)
+        }
     }, 10);
 
-    // clearInterval(interval);
-
-
-    /* $('#player1').bind('timeupdate', function() {
-        var video = $(this).get(0);
-        var iNow = video.currentTime;
-        var countdown = video.duration - iNow;
-        if (countdown <= 0.5) {
-            switchTo2()
+    function switchDevMode() {
+        if (devmode == 0) {
+            $('body').addClass('devmode')
+            devmode = 1;
+        } else {
+            $('body').removeClass('devmode')
+            devmode = 0;
         }
-    });
-
-    $('#player2').bind('timeupdate', function() {
-        var video = $(this).get(0);
-        var iNow = video.currentTime;
-        var countdown = video.duration - iNow;
-        if (countdown <= 0.2) {
-            switchTo1()
-        }
-    }); */
-
-
-    function pad(d) {
-        return (d < 10) ? '0' + d.toString() : d.toString();
     }
 
 </script>
