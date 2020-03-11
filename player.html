@@ -47,7 +47,7 @@
     let switchWindow = 0.1
 
     var queue = [];
-    var socket = new WebSocket("ws://localhost:8080");
+    var socket = new WebSocket("ws://207.180.205.150:8080");
     startPush = 0
     socket.onmessage = function (event) {
         console.log('websocket: ' + event.data)
@@ -94,32 +94,33 @@
         }
     }
 
+    vid1.onloadeddata = function() {
+        const interval = setInterval(function() {
+            if (currentPlayer == 1) {
+                player = vid1
+            } else {
+                player = vid2
+            }
+            
+            remain = player.duration - player.currentTime
+            if (remain <= switchWindow) {
+                switchPlayer()
+            }
 
-    const interval = setInterval(function() {
-        if (currentPlayer == 1) {
-            player = vid1
-        } else {
-            player = vid2
-        }
-        
-        remain = player.duration - player.currentTime
-        if (remain <= switchWindow) {
-            switchPlayer()
-        }
-
-        if (devmode) {
-            remRound = Math.round(remain * 1000) / 1000
-            $('#asd').html(remRound)
-        }
-    }, 10);
+            if (devmode) {
+                remRound = Math.round(remain * 1000) / 1000
+                $('#asd').html(remRound)
+            }
+        }, 10)
+    }
 
     function switchDevMode() {
         if (devmode == 0) {
             $('body').addClass('devmode')
-            devmode = 1;
+            devmode = 1
         } else {
             $('body').removeClass('devmode')
-            devmode = 0;
+            devmode = 0
         }
     }
 
