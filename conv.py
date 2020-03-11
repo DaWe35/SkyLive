@@ -34,7 +34,7 @@ def rmdir(dir):
 		shutil.rmtree(dir)
 
 def sendSocket(data):
-	ws = create_connection('ws://' + config.websocket_ip + ':' + config.websocket_port)
+	ws = create_connection('wss://' + config.websocket_ip + ':' + config.websocket_port)
 	jdata = {
 		"password": config.websocket_password,
 		"data": data
