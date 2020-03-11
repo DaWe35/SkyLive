@@ -47,7 +47,8 @@
     let switchWindow = 0.1
 
     var queue = [];
-    var socket = new WebSocket("wss://coolhd.hu:2053");
+    var socket = new WebSocket("wss://ws.coolhd.hu");
+
     startPush = 0
     socket.onmessage = function (event) {
         console.log('websocket: ' + event.data)

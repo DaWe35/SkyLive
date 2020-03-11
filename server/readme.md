@@ -6,7 +6,9 @@
 
 `php app.php`
 
-## Apache2 config
+For testing, you can run app.php on localhost, and tunnel with Ngrok, but it has 40 connection / minute limit.
+
+## Apache2 reverse proxy config
 
 ```
 <VirtualHost 80.211.53.42:80>
