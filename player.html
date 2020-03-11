@@ -47,7 +47,7 @@
     let switchWindow = 0.1
 
     var queue = [];
-    var socket = new WebSocket("ws://207.180.205.150:8080");
+    var socket = new WebSocket("ws://207.180.205.150:8808");
     startPush = 0
     socket.onmessage = function (event) {
         console.log('websocket: ' + event.data)
