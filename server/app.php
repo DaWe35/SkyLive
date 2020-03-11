@@ -1,6 +1,7 @@
 <?php
 
 require dirname( __FILE__ ) . '/vendor/autoload.php';
+require 'app/socket.php';
 require 'config.php';
 
 use Ratchet\Server\IoServer;
@@ -14,7 +15,7 @@ $server = IoServer::factory(
             new Socket()
         )
     ),
-    8080
+    8808
 );
 
 $server->run();

@@ -10,6 +10,7 @@ class Socket implements MessageComponentInterface {
         $this->connectionCount = 0;
         $this->last = '';
         $this->last_1 = '';
+        echo "Socket started\n";
     }
 
     public function onOpen(ConnectionInterface $conn) {
