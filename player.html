@@ -33,9 +33,9 @@
     }
 </style>
 
-<video id="player1" src="noisecopy/0.mp4" controls preload></video><!--
+<video id="player1" controls preload></video><!--
 
---><video id="player2" src="noisecopy/1.mp4" controls preload></video>
+--><video id="player2" controls preload></video>
 
 <button onclick="switchDevMode()">Dev mode</button>
 
@@ -47,7 +47,7 @@
     let switchWindow = 0.1
 
     var queue = [];
-    var socket = new WebSocket("ws://207.180.205.150:8808");
+    var socket = new WebSocket("wss://coolhd.hu:2053");
     startPush = 0
     socket.onmessage = function (event) {
         console.log('websocket: ' + event.data)
