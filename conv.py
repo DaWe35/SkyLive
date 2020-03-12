@@ -10,14 +10,7 @@ import shutil
 import config
 import json
 import threading
-def blockPrint():
-	sys.stdout = open(os.devnull, 'w')
-def enablePrint():
-	sys.stdout = sys.__stdout__
-blockPrint()
-from moviepy.editor import VideoFileClip 
-enablePrint()
-
+import subprocess
 
 def runBash(command):
 	print(command)
@@ -66,6 +59,14 @@ def share(saveTo):
 	siaskylink = 'https://siasky.net/' + siaskylink
 	sendSocket(siaskylink)
 
+def get_length(filename):
+    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                             "format=duration", "-of",
+                             "default=noprint_wrappers=1:nokey=1", filename],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT)
+    return float(result.stdout)
+
 projectPath = r'C:\Wamp.NET\sites\archive\Skylive'
 if (len(sys.argv) != 2):
 	raise Exception('Please enter one argunemt: livestream flv path')
@@ -85,12 +86,10 @@ def searchFor10sSums(segmentToUse):
 	while True:
 		videoFile = os.path.join(segmentsPath, str(segmentToUse) + ".mp4")
 		if os.path.isfile(videoFile):
-			clip = VideoFileClip(videoFile)
+			dur = get_length(videoFile)
 		else:
 			print('Clip not found: ' + videoFile)
 			return False
-		dur = clip.duration
-		clip.close()
 		segm.append(segmentToUse)
 		sumdur += dur
 		segmentToUse += 1
