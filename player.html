@@ -47,18 +47,30 @@
     let switchWindow = 0.1
 
     var queue = [];
-    var socket = new WebSocket("wss://ws.coolhd.hu");
 
-    startPush = 0
-    socket.onmessage = function (event) {
-        console.log('websocket: ' + event.data)
-        queue.push(event.data);
-        startPush += 1
-        if (startPush == 2) {
-            vid1.src = queue.shift()
-            vid2.src = queue.shift()
+    function startWebsocket() {
+        var socket = new WebSocket('wss://ws.coolhd.hu')
+
+        startPush = 0
+        socket.onmessage = function (event) {
+            console.log('Websocket message received: ' + event.data)
+            queue.push(event.data);
+            startPush += 1
+            if (startPush == 2) {
+                vid1.src = queue.shift()
+                vid2.src = queue.shift()
+            }
+        }
+
+        socket.onclose = function(){
+            console.log('Websocket connection lost, waiting 5s and retry')
+            socket = null
+            setTimeout(startWebsocket, 5000)
         }
     }
+
+    startWebsocket();
+
 
 
     let vid1 = document.getElementById("player1")
