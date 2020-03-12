@@ -54,7 +54,14 @@ def sendSocket(data):
 
 def share(saveTo):
 	print('Uploading...')
-	skylink = Skynet.upload_file(saveTo)
+	opts = type('obj', (object,), {
+		'portal_url': config.upload_portal_url,
+		'portal_upload_path': 'skynet/skyfile',
+		'portal_file_fieldname': 'file',
+		'portal_directory_file_fieldname': 'files[]',
+		'custom_filename': ''
+	})
+	skylink = Skynet.upload_file(saveTo, opts)
 	siaskylink = skylink.replace("sia://", "")
 	siaskylink = 'https://siasky.net/' + siaskylink
 	sendSocket(siaskylink)

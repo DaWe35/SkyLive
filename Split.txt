@@ -1,8 +1,0 @@
-Copy time interval
-ffmpeg -ss 00:00:10 -i v.mkv -t 00:00:10 -c:v copy -c:a copy split.mkv
-
-Split every keyframe
-ffmpeg -ss 00:00:00 -i noise.mkv -acodec copy -f segment -vcodec copy -reset_timestamps 1 -map 0 segments/%d.mp4
-
-Concat
-ffmpeg -f concat -safe 0 -i concat.txt -c copy noiseconcat/0.mp4
