@@ -34,7 +34,6 @@ def sendSocket(data):
 	}
 	jdata = json.dumps(jdata)
 	status = ws.send(jdata)
-	print('Ws send, wait for answer')
 	result =  ws.recv()
 	result1 =  ws.recv()
 	result2 =  ws.recv()
@@ -43,10 +42,11 @@ def sendSocket(data):
 	elif (result != data and result1 != data and result2 != data):
 		raise Exception('Websocket send failed. Unexpected error: ' + result)
 	ws.close()
-	print('Ws success')
+	return True
 
 def share(saveTo):
 	print('Uploading...')
+	start_time = time.time()
 	opts = type('obj', (object,), {
 		'portal_url': config.upload_portal_url,
 		'portal_upload_path': 'skynet/skyfile',
@@ -57,7 +57,8 @@ def share(saveTo):
 	skylink = Skynet.upload_file(saveTo, opts)
 	siaskylink = skylink.replace("sia://", "")
 	siaskylink = 'https://siasky.net/' + siaskylink
-	sendSocket(siaskylink)
+	if (sendSocket(siaskylink)):
+		print("Video uploaded in " % (time.time() - start_time) %)
 
 def get_length(filename):
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
