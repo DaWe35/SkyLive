@@ -98,7 +98,7 @@
     var socket = null;
 
     function startWebsocket() {
-        var socket = new WebSocket('wss://ws.coolhd.hu')
+        socket = new WebSocket('wss://ws.coolhd.hu')
         startPush = 0
         socket.onmessage = function (event) {
             if (event.data != 'reping') {
@@ -123,11 +123,9 @@
             console.log('pinging websocket')
             socket.send('ping');
         }, 60000);
-
-        return socket;
     }
 
-    socket = startWebsocket();
+    startWebsocket();
 
 
 

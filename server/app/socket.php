@@ -8,8 +8,8 @@ class Socket implements MessageComponentInterface {
     public function __construct() {
         $this->clients = [];
         $this->connectionCount = 0;
-        $this->last = '';
-        $this->last_1 = '';
+        $this->last = 'https://siasky.net/_AQCrscX1djH4T5osVe6zmONbrJGKGkaVBVyaDxKIwP7uw';
+        $this->last_1 = 'https://siasky.net/AAAW6IAAvClSx_eZY4QZoAha0rBC6r4dMbomC7hjqsD26A';
         echo "Socket started\n";
     }
 
