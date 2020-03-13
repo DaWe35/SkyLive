@@ -13,7 +13,6 @@ import threading
 import subprocess
 
 def runBash(command):
-	print(command)
 	os.system(command)
 
 def touchDir(dir, strict = False):
@@ -45,7 +44,7 @@ def sendSocket(data):
 	return True
 
 def share(saveTo):
-	print('Uploading...')
+	# print('Uploading', saveTo)
 	start_time = time.time()
 	opts = type('obj', (object,), {
 		'portal_url': config.upload_portal_url,
@@ -58,7 +57,7 @@ def share(saveTo):
 	siaskylink = skylink.replace("sia://", "")
 	siaskylink = 'https://siasky.net/' + siaskylink
 	if (sendSocket(siaskylink)):
-		print("Video uploaded in " % (time.time() - start_time) %)
+		print("Video uploaded in", (time.time() - start_time))
 
 def get_length(filename):
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
@@ -89,7 +88,7 @@ def searchFor10sSums(segmentToUse):
 		if os.path.isfile(videoFile):
 			dur = get_length(videoFile)
 		else:
-			print('Clip not found: ' + videoFile)
+			# print('Clip not found: ' + videoFile)
 			return False
 		segm.append(segmentToUse)
 		sumdur += dur
@@ -99,8 +98,7 @@ def searchFor10sSums(segmentToUse):
 				for segment in segm:
 					concatTXT.write("file '" + os.path.join(segmentsPath, str(segment) + ".mp4") + "'\n")
 			nextSegmentToUse = segm[len(segm)-1] + 1
-			print('Next segments to convert: ')
-			print(segm)
+			print('Next segments to convert:', segm)
 			return [sumdur, nextSegmentToUse]
 
 
@@ -108,8 +106,9 @@ while True:
 	# convert flv Livestream into mp4 segments
 	touchDir(segmentsPath)
 	saveTo = os.path.join(segmentsPath, "%d.mp4")
+	start_time = time.time()
 	runBash('ffmpeg -loglevel panic -ss ' + str(streamedTime) + ' -i "' + recordVideo + '" -acodec copy -f segment -vcodec copy -reset_timestamps 1 -map 0 "' + saveTo + '"')
-	print('prev ffmpeg finished')
+	print('sector cutting finished in', (time.time() - start_time))
 
 	nextSegmentToUse = 0
 	while True:
@@ -119,7 +118,9 @@ while True:
 		segmentSum = chunks[0]
 		nextSegmentToUse = chunks[1]
 		saveTo = os.path.join(convertedPath, str(nextStreamFilename) + '.mp4')
+		start_time = time.time()
 		runBash('ffmpeg -loglevel panic -f concat -safe 0 -i concat.txt -c copy ' + saveTo)
+		print('concat finished in', (time.time() - start_time), 'uploading', nextStreamFilename)
 		x = threading.Thread(target=share, args=(saveTo,))
 		x.start()
 		streamedTime += segmentSum
@@ -127,5 +128,5 @@ while True:
 
 
 	rmdir(segmentsPath)
-	print('Sleep 1')
+	# print('Waiting for new segments')
 	time.sleep(1)
