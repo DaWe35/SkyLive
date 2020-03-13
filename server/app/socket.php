@@ -28,24 +28,24 @@ class Socket implements MessageComponentInterface {
         if ($msg == 'ping') {
             $this->clients[$cid]->send('reping');
         } else if ($msg == 'demo') {
-            $this->clients[$cid]->send('https://siasky.net/_B3zqoBcdUKDApSM434MAI71asJXa6i6TMjdIZhDgfGaCg');
-            $this->clients[$cid]->send('https://siasky.net/_BFEVbLBDtJ7JQDBtQk7-hZpFRKI7QWXvszbVY_IdSyLTg');
-            $this->clients[$cid]->send('https://siasky.net/_BlJiv1cnrEViM4aiivcn8zEawM-Y54esbtN_Ia5-jqnyA');
-            $this->clients[$cid]->send('https://siasky.net/_B1waOpGBPqvBwx7IG8g62fjJIxce2co7KKLG5DTwiRVHA');
-            $this->clients[$cid]->send('https://siasky.net/AACB1Uoh2uUCbaAAocUBIyqCcVhRlOVQSB4Xl1qTgjeeDA');
-            $this->clients[$cid]->send('https://siasky.net/AACs2LgXSEOzq5MWizVdXWCaU5DNFyL8E730HoDGNalUbA');
-            $this->clients[$cid]->send('https://siasky.net/_B3gNlY25lEgjCfOSgd5DheOqVQFJUSrIkxSPYZTBqymQw');
-            $this->clients[$cid]->send('https://siasky.net/AAAc2Qpgyu9m2-2xknCYc9S2eUG2d84o8Y-zxINVJgFunQ');
-            $this->clients[$cid]->send('https://siasky.net/_B0v5QQ8NOoLDJNYLrkOvGCLoLYzmzEO4_VFXJakpH-nKw');
-            $this->clients[$cid]->send('https://siasky.net/_B0VJqOUeHcbMo8Jm4BIPE38wYFX2LkF6fir3QzZXyxhtg');
-            $this->clients[$cid]->send('https://siasky.net/_AHjj5YX2Yp0a18D8gqGNITRGFjywzW8RPnbgOFbeoOaAg');
-            $this->clients[$cid]->send('https://siasky.net/AABAwpg3tCmTJ7shRWv9UCgn1U7On40yNPUCdKm7H7D3Pg');
-            $this->clients[$cid]->send('https://siasky.net/AABxsW7XVZZA0BinWAX7M_lIB3vejASe6VMxerGYrCClHw');
-            $this->clients[$cid]->send('https://siasky.net/AADs2Y0uRg9NDd4k-0dfrL5DvmEcWpTqpvdugrwQNe9GVg');
-            $this->clients[$cid]->send('https://siasky.net/AAC4hHFAsiH5U-ZHjADa3AXC5ziDLR5JkLNG1eScAfqI3A');
-            $this->clients[$cid]->send('https://siasky.net/_B2H32TA93K0EAyfSc93u_pq0UGzB9JXRoZ7pWxXMGa9Kg');
-            $this->clients[$cid]->send('https://siasky.net/_BW9wTyA6BqeGEs9h-Yo4ePM6F5Hj1UihBdYU7Q2KbTMXg');
-            $this->clients[$cid]->send('https://siasky.net/AADRzR3Z__O0l6l3mgiGuuhfAuWlMJsA6Ivgo4IX1ejyuA');
+            $this->clients[$cid]->send('https://siasky.net/_B3zqoBcdUKDApSM434MAI71asJXa6i6TMjdIZhDgfGaCg'); # 0
+            $this->clients[$cid]->send('https://siasky.net/_B2H32TA93K0EAyfSc93u_pq0UGzB9JXRoZ7pWxXMGa9Kg'); # 1
+            $this->clients[$cid]->send('https://siasky.net/_BFEVbLBDtJ7JQDBtQk7-hZpFRKI7QWXvszbVY_IdSyLTg'); # 2
+            $this->clients[$cid]->send('https://siasky.net/_BW9wTyA6BqeGEs9h-Yo4ePM6F5Hj1UihBdYU7Q2KbTMXg'); # 3
+            $this->clients[$cid]->send('https://siasky.net/AADRzR3Z__O0l6l3mgiGuuhfAuWlMJsA6Ivgo4IX1ejyuA'); # 4
+            $this->clients[$cid]->send('https://siasky.net/AACB1Uoh2uUCbaAAocUBIyqCcVhRlOVQSB4Xl1qTgjeeDA'); # 5
+            $this->clients[$cid]->send('https://siasky.net/AAAc2Qpgyu9m2-2xknCYc9S2eUG2d84o8Y-zxINVJgFunQ'); # 6
+            $this->clients[$cid]->send('https://siasky.net/_BlJiv1cnrEViM4aiivcn8zEawM-Y54esbtN_Ia5-jqnyA'); # 7
+            $this->clients[$cid]->send('https://siasky.net/_B0VJqOUeHcbMo8Jm4BIPE38wYFX2LkF6fir3QzZXyxhtg'); # 8
+            $this->clients[$cid]->send('https://siasky.net/AAC4hHFAsiH5U-ZHjADa3AXC5ziDLR5JkLNG1eScAfqI3A'); # 9
+            $this->clients[$cid]->send('https://siasky.net/AABAwpg3tCmTJ7shRWv9UCgn1U7On40yNPUCdKm7H7D3Pg'); # 10
+            $this->clients[$cid]->send('https://siasky.net/AADs2Y0uRg9NDd4k-0dfrL5DvmEcWpTqpvdugrwQNe9GVg'); # 11
+            $this->clients[$cid]->send('https://siasky.net/_B0v5QQ8NOoLDJNYLrkOvGCLoLYzmzEO4_VFXJakpH-nKw'); # 12
+            $this->clients[$cid]->send('https://siasky.net/_B3gNlY25lEgjCfOSgd5DheOqVQFJUSrIkxSPYZTBqymQw'); # 13
+            $this->clients[$cid]->send('https://siasky.net/_B1waOpGBPqvBwx7IG8g62fjJIxce2co7KKLG5DTwiRVHA'); # 14
+            $this->clients[$cid]->send('https://siasky.net/AABxsW7XVZZA0BinWAX7M_lIB3vejASe6VMxerGYrCClHw'); # 15
+            $this->clients[$cid]->send('https://siasky.net/AACs2LgXSEOzq5MWizVdXWCaU5DNFyL8E730HoDGNalUbA'); # 16
+            $this->clients[$cid]->send('https://siasky.net/_AHjj5YX2Yp0a18D8gqGNITRGFjywzW8RPnbgOFbeoOaAg'); # 17
         } else {
             $msg = json_decode($msg, true);
             if ($msg['password'] == socketPassword) {
