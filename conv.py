@@ -67,18 +67,6 @@ def get_length(filename):
         stderr=subprocess.STDOUT)
     return float(result.stdout)
 
-projectPath = r'C:\Wamp.NET\sites\archive\Skylive'
-if (len(sys.argv) != 2):
-	raise Exception('Please enter one argunemt: livestream flv path')
-recordVideo = sys.argv[1]
-streamedTime = 0
-nextStreamFilename = 0
-
-segmentsPath = os.path.join(projectPath, "segments")
-convertedPath = os.path.join(projectPath, "converted")
-rmdir(segmentsPath)
-touchDir(convertedPath, True)
-
 
 def searchFor10sSums(segmentToUse):
 	segm = []
@@ -98,35 +86,48 @@ def searchFor10sSums(segmentToUse):
 				for segment in segm:
 					concatTXT.write("file '" + os.path.join(segmentsPath, str(segment) + ".mp4") + "'\n")
 			nextSegmentToUse = segm[len(segm)-1] + 1
-			print('Next segments to convert:', segm)
+			# print('Next segments to convert:', segm)
 			return [sumdur, nextSegmentToUse]
 
+def fileExist(file):
+	if os.path.isfile(videoFile):
+		return True
+	else:
+		return False
+
+projectPath = r'C:\Wamp.NET\sites\archive\Skylive'
+if (len(sys.argv) != 2):
+	raise Exception('Please enter one argunemt: livestream flv path')
+recordVideo = sys.argv[1]
+streamedTime = 0
+nextStreamFilename = 0
+
+segmentsPath = os.path.join(projectPath, "segments")
+touchDir(segmentsPath, True)
 
 while True:
-	# convert flv Livestream into mp4 segments
-	touchDir(segmentsPath)
-	saveTo = os.path.join(segmentsPath, "%d.mp4")
+	# convert .flv stream into .ts HLS segments
+	saveTo = os.path.join(segmentsPath, "live.m3u8")
 	start_time = time.time()
-	runBash('ffmpeg -loglevel panic -ss ' + str(streamedTime) + ' -i "' + recordVideo + '" -acodec copy -f segment -vcodec copy -reset_timestamps 1 -map 0 "' + saveTo + '"')
-	print('sector cutting finished in', (time.time() - start_time))
+	runBash('ffmpeg -ss ' + str(streamedTime) + ' -i "' + recordVideo + '" -profile:v -c copy baseline -level 3.0 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls "' + saveTo + '"')
+	print('Hls cutting finished in', (time.time() - start_time))
 
 	nextSegmentToUse = 0
 	while True:
-		chunks = searchFor10sSums(nextSegmentToUse)
-		if (chunks == False):
+
+		nextSegmentToCheck = os.path.join(segmentsPath, 'live' + str(nextStreamFilename) + '.ts')
+		if fileExist(nextSegmentToCheck):
+			print('Ch next semgm:', nextSegmentToCheck)
+			""" upload
+			append to m3u8
+					print('#EXTINF:' + str(segmentSum) + ',')
+					print(str(nextStreamFilename) + '.ts')
+			update m3u8 """
+			streamedTime += get_length(nextSegmentToCheck)
+			nextStreamFilename += 1
+		else:
 			break
-		segmentSum = chunks[0]
-		nextSegmentToUse = chunks[1]
-		saveTo = os.path.join(convertedPath, str(nextStreamFilename) + '.mp4')
-		start_time = time.time()
-		runBash('ffmpeg -loglevel panic -f concat -safe 0 -i concat.txt -c copy ' + saveTo)
-		print('concat finished in', (time.time() - start_time), 'uploading', nextStreamFilename)
-		x = threading.Thread(target=share, args=(saveTo,))
-		x.start()
-		streamedTime += segmentSum
-		nextStreamFilename += 1
 
 
-	rmdir(segmentsPath)
 	# print('Waiting for new segments')
 	time.sleep(1)
