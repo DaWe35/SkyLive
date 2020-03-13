@@ -54,11 +54,18 @@
 
     /* DEV MODE */
     .devmode video {
-        width: 50%;
+        width: 40%;
     }
 
     .devmode #player2, body.devmode #player1 {
         display: inline-block !important;
+        box-shadow: none;
+        transition: border 0.3s;
+        margin: 10px;
+    }
+
+    .devmode #player2.active, body.devmode #player1.active {
+        box-shadow: 0px 0px 20px 6px #ED8936;
     }
 
     .devmode #playerinfo {
@@ -66,7 +73,7 @@
     }
 </style>
 
-<video id="player1" controls preload></video><!--
+<video id="player1" controls preload autoplay muted class="active"></video><!--
 
 --><video id="player2" controls preload></video>
 
@@ -88,29 +95,39 @@
     let switchWindow = 0.1
 
     var queue = [];
+    var socket = null;
 
     function startWebsocket() {
         var socket = new WebSocket('wss://ws.coolhd.hu')
-
         startPush = 0
         socket.onmessage = function (event) {
-            console.log('Websocket message received: ' + event.data)
-            queue.push(event.data);
-            startPush += 1
-            if (startPush == 2) {
-                vid1.src = queue.shift()
-                vid2.src = queue.shift()
+            if (event.data != 'reping') {
+                console.log('Websocket message received: ' + event.data)
+                queue.push(event.data);
+                startPush += 1
+                if (startPush == 2) {
+                    vid1.src = queue.shift()
+                    vid2.src = queue.shift()
+                }
             }
         }
 
         socket.onclose = function(){
-            console.log('Websocket connection lost, waiting 5s and retry')
+            console.log('Websocket connection lost, waiting 1s and retry')
             socket = null
-            setTimeout(startWebsocket, 5000)
+            clearInterval(ping)
+            setTimeout(startWebsocket, 1000)
         }
+
+        ping = setInterval(function(){
+            console.log('pinging websocket')
+            socket.send('ping');
+        }, 60000);
+
+        return socket;
     }
 
-    startWebsocket();
+    socket = startWebsocket();
 
 
 
@@ -126,26 +143,28 @@
             return
         }
         if (currentPlayer == 1) {
-            vid2.play()
-            setTimeout(function(){
-                vid1.src = queue.shift()
-            }, 1000);
-            setTimeout(function(){
-                vid2.style.display = 'inline-block'
-                vid1.style.display = 'none'
-            }, switchWindow-10);
+            from = vid1
+            to = vid2
             currentPlayer = 2
+            $('#player1').removeClass('active')
+            $('#player2').addClass('active')
         } else {
-            vid1.play()
-            setTimeout(function(){
-                vid2.src = queue.shift()
-            }, 1000);
-            setTimeout(function(){
-                vid1.style.display = 'inline-block'
-                vid2.style.display = 'none'
-            }, switchWindow-10);
+            from = vid2
+            to = vid1
             currentPlayer = 1
+            $('#player2').removeClass('active')
+            $('#player1').addClass('active')
         }
+
+        to.play()
+        setTimeout(function(){
+            from.src = queue.shift()
+        }, 1000);
+        setTimeout(function(){
+            to.style.display = 'inline-block'
+            from.style.display = 'none'
+        }, switchWindow-10);
+
     }
 
     vid1.onloadeddata = function() {
@@ -313,7 +332,7 @@
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw the initial box on the canvas.
-    ctx.fillRect(posX, 0, boxWidth, canvas.height);
+    // ctx.fillRect(posX, 0, canvas.width, canvas.height);
 
   });
 

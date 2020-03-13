@@ -6,7 +6,7 @@ use Ratchet\ConnectionInterface;
 
 class Socket implements MessageComponentInterface {
     public function __construct() {
-        $this->clients = new \SplObjectStorage;
+        $this->clients = [];
         $this->connectionCount = 0;
         $this->last = '';
         $this->last_1 = '';
@@ -15,31 +15,29 @@ class Socket implements MessageComponentInterface {
 
     public function onOpen(ConnectionInterface $conn) {
         // Store the new connection in $this->clients
-        $this->clients->attach($conn);        
+        $cid = $conn->resourceId;
+        $this->clients[$cid] = $conn;
         $this->connectionCount += 1;
         echo "{$this->connectionCount} peers, new connection: {$conn->resourceId}\n";
-        foreach ( $this->clients as $client ) {
-            if ( $conn->resourceId == $client->resourceId ) {
-                $client->send( $this->last_1 );
-                $client->send( $this->last );
-            }
-        }
+        $this->clients[$cid]->send( $this->last_1 );
+        $this->clients[$cid]->send( $this->last );
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
-        $msg = json_decode($msg, true);
-        if ($msg['password'] == socketPassword) {
-            $this->last_1 = $this->last;
-            $this->last = $msg['data'];
-            echo $msg['data'] . "\n";
-            foreach ( $this->clients as $client ) {
-                $client->send( $msg['data'] );
-            }
+        $cid = $from->resourceId;
+        if ($msg == 'ping') {
+            $this->clients[$cid]->send( 'reping' );
         } else {
-            foreach ( $this->clients as $client ) {
-                if ( $from->resourceId == $client->resourceId ) {
-                    $client->send( 'wrong_pass' );
+            $msg = json_decode($msg, true);
+            if ($msg['password'] == socketPassword) {
+                $this->last_1 = $this->last;
+                $this->last = $msg['data'];
+                echo $msg['data'] . "\n";
+                foreach ( $this->clients as $client ) {
+                    $client->send( $msg['data'] );
                 }
+            } else {
+                $this->clients[$cid]->send( 'wrong_pass' );
             }
         }
     }
