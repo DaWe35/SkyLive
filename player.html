@@ -73,7 +73,7 @@
     }
 </style>
 
-<video id="player1" controls preload autoplay muted class="active"></video><!--
+<video id="player1" controls preload class="active"></video><!--
 
 --><video id="player2" controls preload></video>
 
@@ -93,6 +93,11 @@
 
 <script>
     let switchWindow = 0.1
+    let vid1 = document.getElementById("player1")
+    vid1.play()
+    let vid2 = document.getElementById("player2")
+    currentPlayer = 1
+    devmode = 0
 
     var queue = [];
     var socket = null;
@@ -127,12 +132,6 @@
 
     startWebsocket();
 
-
-
-    let vid1 = document.getElementById("player1")
-    let vid2 = document.getElementById("player2")
-    currentPlayer = 1
-    devmode = 0
 
     function switchPlayer() {
         if (queue.length == 0) {
