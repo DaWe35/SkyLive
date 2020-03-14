@@ -13,7 +13,7 @@ Live HLS video streams hosted on Skynet
 
 - Download & config OBS
 
-    ![OBS settings](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_settings.jpg.jpg)
+    ![OBS settings](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_settings.jpg)
 
     - Settings -> Output -> Recording
 
