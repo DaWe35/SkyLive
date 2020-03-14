@@ -98,8 +98,16 @@
         } else {
             var streamid = 'skylive'
         }
-
-        $('#src').attr("src", "https://skylive.coolhd.hu/stream.php?streamid=" + streamid)
+        if (urlParams.has('portal') && urlParams.has('portal') != '') {
+            var portal = urlParams.get('portal'); // "edit"
+        } else {
+            var portal   = window.location.origin;        }
+        
+        if (portal == null) {
+            portal = 'https://siasky.net'
+        }
+        console.log('Using portal: ' + portal)
+        $('#src').attr("src", "https://skylive.coolhd.hu/stream.php?portal=" + portal + "&streamid=" + streamid)
 
         var player = videojs('my_video_1', {
             html5: {

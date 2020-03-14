@@ -10,8 +10,6 @@ if (empty($streamid) || strlen($streamid) <= 1) {
     exit('Wrong stream id');
 }
 
-
-
 $myfile = fopen("streams/" . $streamid. ".txt", "r") or die("Unable to open file!");
 
 ?>
@@ -21,5 +19,11 @@ $myfile = fopen("streams/" . $streamid. ".txt", "r") or die("Unable to open file
 #EXT-X-MEDIA-SEQUENCE:0
 
 <?php
-echo fread($myfile,filesize("streams/" . $streamid. ".txt"));
+$content = fread($myfile,filesize("streams/" . $streamid. ".txt"));
+if (isset($_GET['portal']) && !empty($_GET['portal'])) {
+    
+    $content = str_replace("https://siasky.net",$_GET['portal'],$content);
+
+}
+echo $content;
 fclose($myfile);
