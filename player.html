@@ -3,6 +3,7 @@
     <link href="https://unpkg.com/video.js@6.7.1/dist/video-js.css" rel="stylesheet">
     <script src="https://unpkg.com/video.js@6.7.1/dist/video.js"></script>
     <script src="https://unpkg.com/@videojs/http-streaming@0.9.0/dist/videojs-http-streaming.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <style>
         body {
@@ -85,11 +86,21 @@
 
     <div class="player-container">
         <video-js id="my_video_1" class="vjs-default-skin vjs-16-9" controls preload="auto" width="70%">
-            <source src="https://skylive.coolhd.hu/stream.php?streamid=skylive" type="application/x-mpegURL">
+            <source id="src" type="application/x-mpegURL">
         </video-js>
     </div><!--
     --><iframe id="chat" src="https://minnit.chat/SkyLive?embed&&nickname=" style="border:none; width:20%; height:100%;" allowTransparency="true"></iframe><br><a href="https://minnit.chat/SkyLive" target="_blank">HTML5 Chatroom powered by Minnit Chat</a>
     <script>
+        var urlParams = new URLSearchParams(window.location.search);
+
+        if (urlParams.has('stream') && urlParams.has('stream') != '') {
+            var streamid = urlParams.get('stream'); // "edit"
+        } else {
+            var streamid = 'skylive'
+        }
+
+        $('#src').attr("src", "https://skylive.coolhd.hu/stream.php?streamid=" + streamid)
+
         var player = videojs('my_video_1', {
             html5: {
                 hls: {
