@@ -13,8 +13,6 @@ Live HLS video streams hosted on Skynet
 
 - Download & config OBS
 
-    ![OBS settings](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_settings.jpg)
-
     - Settings -> Output -> Recording
 
         - Recording path: `.../Skylive/record_here`
@@ -22,6 +20,8 @@ Live HLS video streams hosted on Skynet
         - Recording format: `m3u8`
 
         - Custom muxer settings: `hls_time=12 hls_list_size=0`
+
+    ![OBS settings](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_settings.jpg)
 
     - Settings -> Advanced -> Recording
 
