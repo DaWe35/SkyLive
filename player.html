@@ -4,6 +4,7 @@
     <script src="https://unpkg.com/video.js@6.7.1/dist/video.js"></script>
     <script src="https://unpkg.com/@videojs/http-streaming@0.9.0/dist/videojs-http-streaming.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <title>SkyLive 0.43 beta</title>
 
     <style>
         body {
@@ -109,11 +110,17 @@
         console.log('Using portal: ' + portal)
         $('#src').attr("src", "https://skylive.coolhd.hu/stream.php?portal=" + portal + "&streamid=" + streamid)
 
+
+        var overrideNative = true;
+
         var player = videojs('my_video_1', {
             html5: {
                 hls: {
-                    overrideNative: true,
+                overrideNative: overrideNative
                 },
+                nativeVideoTracks: !overrideNative,
+                nativeAudioTracks: !overrideNative,
+                nativeTextTracks: !overrideNative,
                 autoplay: true,
                 muted: true
             }
@@ -143,9 +150,6 @@
                 chatmode = 0
             }
         }
-
-
-
 
 
     // Chat button
