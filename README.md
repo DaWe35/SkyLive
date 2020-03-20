@@ -9,6 +9,12 @@ First live: https://siasky.net/EACSRCJLMtS-P6tpGNr1ZMCGFBbWXKoNKTHV_3l81jLE1Q
 
 Download first live in mp4: https://siasky.net/CADUOqGUR0us09iZrSAAq6Qj5MrI2GrFqtdEiUKwkyZllA
 
+``` diff
+- Currently, there is a bug in OBS, so you can't record more than 16 chunks into m3u8 (tested on win10).
+- With some trick, you can stream ~15 minutes, but when they fix the issue, of course it will be unlimited.
++ Tricks: use OBS 24.0.3 (for some reason, it works until 33 chunk recorded) with "hls_time=30".
+```
+
 # Install
 
 - Install python 3.7+
