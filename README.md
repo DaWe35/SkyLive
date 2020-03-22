@@ -9,35 +9,51 @@ First live: https://siasky.net/EACSRCJLMtS-P6tpGNr1ZMCGFBbWXKoNKTHV_3l81jLE1Q
 
 Download first live in mp4: https://siasky.net/CADUOqGUR0us09iZrSAAq6Qj5MrI2GrFqtdEiUKwkyZllA
 
-``` diff
-- Currently, there is a bug in OBS, so you can't record more than 16 chunks into m3u8 (tested on win10).
-- With some trick, you can stream ~15 minutes, but when they fix the issue, of course it will be unlimited.
-+ Tricks: use OBS 24.0.3 (for some reason, it works until 33 chunk recorded) with "hls_time=30".
-```
-
-# Install
+# Setup
 
 - Install python 3.7+
 
 - `cd Skylive && pip install -r requirements.txt`
 
-- Setup a lightweight PHP server for storing the file name only. Upload /server/ contents to a webserver, and `chmod 777 streams`
+- Setup a lightweight PHP server for storing the file names only. Upload /server/ contents to a webserver, and `cd public_server_folder & chmod 777 streams`
 
 - Download & config OBS
 
-    - Settings -> Output -> Recording
+  TL;DR: use the settings what you see below
+  
+  Currently, there is a [bug](https://github.com/obsproject/obs-studio/issues/2500) in OBS, so you can't record more than 14 chunks into m3u8 (tested on Win10 only). It is recommended to try it out on your system, maybe you can record more than 16 chunks (please write your experience [in a comment](https://github.com/obsproject/obs-studio/issues/2500). But while the issue is not fixed, we need to use the custom ffmpeg output:
+  
+  ![OBS settings](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_settings.jpg)
 
-        - Recording path: `.../Skylive/record_here`
-
-        - Recording format: `m3u8`
-
-        - Custom muxer settings: `hls_time=12 hls_list_size=0`
-
-    ![OBS settings](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_settings.jpg)
-
-    - Settings -> Advanced -> Recording
-
-        - Filename Formatting: `live` - that's enought (and important!)
+    - Output mode: *Advanced*
+    
+    - Type: *Custom output (FFmpeg)*
+    
+      *Without FFmpeg, the recording may be stuck after 14 or 33 chunks*
+    
+    - File path: *.../Skylive/record_here*
+    
+      *This is important, the python script will search for new files in 'record_here'*
+    
+    - Container format: *hls*
+    
+      *It records small .ts chunks, compatible with HTTP Live Streaming*
+    
+    - Muxer settings: *hls_time=10*
+    
+      *10 seconds chunks are acceptable - too large cause more delay, too small causes upload congestion.*
+      
+    - Video Encoder Settings: *preset=veryfast*
+    
+      *Saves the CPU. Available presets: ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow, placebo*
+      
+      *Try out some, but be careful: if you see this warning, viewers will experience buffering*
+      
+      ![OBS recording overloaded](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/overload.jpg)
+    
+    - Under Settings -> Advanced -> Recording, change the Filename Formatting to `live` - that's enough (and important!)
+    
+      ![OBS filename](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_filename.jpg)
 
 # Start
 
@@ -51,7 +67,7 @@ Download first live in mp4: https://siasky.net/CADUOqGUR0us09iZrSAAq6Qj5MrI2GrFq
 
 - Uploader.py uploads only the *current chunk - 1*th file. So if your last chunk is `live44.ts`, only `live43.ts` has been uploaded. You need to create an empty file `live45.ts`, if you want to upload the 44th chunk.
 
-- Afte all chunk are uploaded, close `uploader.py`
+- After each chunk was uploaded, close `uploader.py`
 
 - If you want to make the whole playlist replayable, you need to insert `#EXT-X-ENDLIST` to the end of the playlist. Open the `streams` folder on your webserver, and paste it to the current stream file (filename depends on configured *streamid*).
 
