@@ -1,0 +1,55 @@
+.bg-gradient {
+	background: rgb(112,36,89);
+	background: linear-gradient(121deg, rgba(112,36,89,1) 0%, rgba(68,51,122,1) 100%); 
+}
+
+#subscribe button {
+	background-color: #FFF;
+	border: none;
+	color: rgba(68,51,122,1);
+}
+
+.play {
+	border: 0;
+	background: transparent;
+	box-sizing: border-box;
+	width: 0;
+	height: 30px;
+	border-color: transparent transparent transparent #FFF;
+	cursor: pointer;
+	border-style: solid;
+	border-width: 17px 0 17px 30px;
+	vertical-align: super;
+	padding: 0px;
+	cursor: text !important;
+}
+
+.play:hover {
+	border-color: transparent transparent transparent #FFF;
+}
+
+.card a, .card a:hover {
+	color: #000;
+	text-decoration: none;
+}
+
+.card-text a, .card-text a:hover,
+a.card-text, a.card-text:hover {
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+}
+
+.ribbon {
+	position: absolute;
+	color: #FFF;
+	padding: 5px 12px;
+	bottom: 0px;
+}
+
+.ribbon-green {
+	background-color: #2F855A;
+}
+
+.ribbon-red {
+	background-color: #C53030;
+}

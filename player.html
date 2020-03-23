@@ -20,6 +20,7 @@
             margin: 0;
             color: #FFF;
             min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
         }
         video {
             width: 100%;
@@ -81,11 +82,25 @@
         .chatmode #chat {
             display: inline-block !important;
         }
+
+        .logo {
+            color: #FFF;
+            font-size: 140%;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 20px;
+            text-align: center;
+            display: block;
+        }
+
+        .chatmode .logo {
+            display: none;
+        }
     </style>
 </head>
 <body>
-
     <div class="player-container">
+        <a href="https://skylive.coolhd.hu" class="logo">SkyLive</a>
         <video-js id="my_video_1" class="vjs-default-skin vjs-16-9" controls preload="auto" width="70%">
             <source id="src" type="application/x-mpegURL">
         </video-js>
