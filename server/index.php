@@ -135,7 +135,9 @@ $player = 'https://siasky.net/EADgqfCdd7hKLla9oyGM7uQPFrH-F5xs2eaJxpMAwjpLAg?str
 	<footer class="py-5 bg-dark">
 		<div class="container">
 			<p class="m-0 text-center text-white">
-				<a href="https://github.com/DaWe35/SkyLive" class="text-white">GitHub</a></p>
+				<a href="https://minnit.chat/SkyLive" class="text-white">Chat</a>
+				•
+				<a href="https://github.com/DaWe35/SkyLive" class="text-white">GitHub</a>
 			</p>
 		</div>
 		<!-- /.container -->
