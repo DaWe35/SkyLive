@@ -34,14 +34,19 @@ $player = 'https://siasky.net/EADUI8z-jYHXiTgFvVcWw1mrEZD5EDsNAxJCUvmaFzplAw?str
 					</h1>
 					<p class="lead mb-5 text-white-50">Decentralized livestreams on Sia Skynet<br>
 				</div>
-				<div class="col-lg-3">
-					<form id="subscribe">
-						<p class="lead text-white-50">Subscribe for newsletter<br>
-						<div class="form-group">
-							<input type="email" class="form-control" placeholder="Enter address">
-						</div>
-						<button type="submit" class="btn btn-primary float-right">Subscribe</button>
-					</form>
+				<div class="col-lg-3"> <?php
+					if (isset($_GET['subscribed'])) { ?>
+							<p class="lead text-white">Succesful subscription,<br> thank you!<br>
+						</form> <?php
+					} else { ?>
+						<form id="subscribe" action="subscribe.php" method="post">
+							<p class="lead text-white-50">Subscribe for newsletter<br>
+							<div class="form-group">
+								<input type="email" name="email" class="form-control" placeholder="Enter address">
+							</div>
+							<button type="submit" class="btn btn-primary float-right">Subscribe</button>
+						</form> <?php
+					} ?>
 				</div>
 			</div>
 		</div>
