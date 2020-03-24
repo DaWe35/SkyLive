@@ -5,3 +5,4 @@
 /server/config.php
 /server/vendor
 /__pycache__
+/error_log.txt
