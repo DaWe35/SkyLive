@@ -18,6 +18,8 @@ portals = [
     'https://skydrain.net',
     'https://skynethub.io',
     'https://sialoop.net',
+    'https://skynet.utxo.no',
+    '',
     'https://siasky.net',
     'https://siasky.net',
     'https://siasky.net',
