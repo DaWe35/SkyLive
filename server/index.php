@@ -76,7 +76,6 @@ $player = 'https://siasky.net/EAC9z7PbbcjGDCUCLXttSQ8MGY_D_4zOZEwj6gAORVYrAg?str
 						</a>
 						A hands-on workshop with David Molnar from Wasabi Wallet.<br>
 						<a href="https://www.meetup.com/Open-Blockchain-Workshop-Series/events/269152809/" class="card-text">Event info</a><br>
-						<a href="https://us04web.zoom.us/j/804276910" class="card-text">Join!</a><br>
 					</div>
 				</div>
 			</div> <?php
