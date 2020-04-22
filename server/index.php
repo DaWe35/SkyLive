@@ -56,6 +56,21 @@ $player = 'https://siasky.net/EAC9z7PbbcjGDCUCLXttSQ8MGY_D_4zOZEwj6gAORVYrAg?str
 	<div class="container-fluid">
 		<div class="row mt-5 mr-2 ml-2"> <?php
 
+		$streamId = 'podcast'; ?>
+		<div class="col-md-3 mb-5">
+			<div class="card h-100 shadow">
+				<a href="<?= $player . $streamId?>" class="position-relative">
+					<img class="card-img-top" src="thumbnails/podcast.png" alt="">
+				</a>
+				<div class="card-body">
+					<a href="<?= $player . $streamId?>">
+						<h4 class="card-title">Podcast</h4>
+					</a>
+					<div class="card-text">Sia's David Vorick: Outcompeting Amazon Web Services, a $35B Revenue Giant</div>
+				</div>
+			</div>
+		</div> <?php
+
 			$streamId = 'obws'; ?>
 			<div class="col-md-3 mb-5">
 				<div class="card h-100 shadow">
