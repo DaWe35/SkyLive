@@ -12,6 +12,8 @@ from tabulate import tabulate
 import curses
 from threading import Thread
 
+concurrent_uploads = 0
+
 def runBash(command):
 	os.system(command)
 
@@ -46,6 +48,7 @@ def upload_file(saveTo, portal):
 		return False
 
 def upload(saveTo, fileId, length, filearr):
+	global concurrent_uploads
 	filearr[fileId].status = 2
 	start_time = time.time()
 
@@ -66,6 +69,7 @@ def upload(saveTo, fileId, length, filearr):
 	if filearr[fileId].status != 6:
 		filearr[fileId].status = 3
 	filearr[fileId].uploadTime = round(time.time() - start_time)
+	concurrent_uploads -= 1
 
 
 def get_length(filename):
@@ -101,6 +105,7 @@ def updateDisplay(window, filearr, symbols):
 	window.addstr(0, 0, 'Status symbols:\n')
 	symbarray = []
 	idx = 0
+	
 	for symb in symbols:
 		symbarray.append([symb.symbol, symb.description, idx])
 		idx += 1
@@ -150,6 +155,7 @@ def share(fileId, filearr):
 		filearr[fileId].status = 5
 
 def worker(window):
+	global concurrent_uploads
 	projectPath = os.path.dirname(os.path.abspath(__file__))
 	recordFolder = os.path.join(projectPath, "record_here")
 	streamedTime = 0
@@ -200,12 +206,13 @@ def worker(window):
 		nextFile = os.path.join(recordFolder, "live" + str(nextStreamFilename) + ".ts")
 		nextAfterFile = os.path.join(recordFolder, "live" + str(nextStreamFilename + 1) + ".ts")
 		updateDisplay(window, filearr, symbols)
-		if os.path.isfile(nextAfterFile) or (isPlaylistFinished(recordFolder) and os.path.isfile(nextFile)):
+		if concurrent_uploads < 10 and ( os.path.isfile(nextAfterFile) or ( isPlaylistFinished(recordFolder) and os.path.isfile(nextFile) ) ):
 			filearr.append(VideoFile(nextStreamFilename + 1))
 			filearr[nextStreamFilename].status = 1
 			nextLen = get_length(nextFile)
 			filearr[nextStreamFilename].length = nextLen
 			Thread(target=upload, args=(nextFile, nextStreamFilename, nextLen, filearr)).start()
+			concurrent_uploads += 1
 			nextStreamFilename += 1
 		else:
 			time.sleep(1)
