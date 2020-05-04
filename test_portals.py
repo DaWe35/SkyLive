@@ -19,6 +19,7 @@ portals = [
     'https://sialoop.net',
     'https://skynet.utxo.no',
     'https://skynet.tutemwesi.com',
+    'https://skyportal.xyz',
     '',
     'https://siasky.net',
     'https://siasky.net',
