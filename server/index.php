@@ -19,6 +19,12 @@ $player = 'https://siasky.net/EAC9z7PbbcjGDCUCLXttSQ8MGY_D_4zOZEwj6gAORVYrAg?str
 
 	<!-- Custom styles for this template -->
 	<link href="style.css" rel="stylesheet">
+	<script>
+		function printDateTime(datetime) {
+			var evtm = new Date(parseInt(datetime*1000)).toLocaleString([], {year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit'})
+			document.write(evtm)
+		}
+	</script>
 
 </head>
 
@@ -56,20 +62,42 @@ $player = 'https://siasky.net/EAC9z7PbbcjGDCUCLXttSQ8MGY_D_4zOZEwj6gAORVYrAg?str
 	<div class="container-fluid">
 		<div class="row mt-5 mr-2 ml-2"> <?php
 
-		$streamId = 'podcast'; ?>
-		<div class="col-md-3 mb-5">
-			<div class="card h-100 shadow">
-				<a href="<?= $player . $streamId?>" class="position-relative">
-					<img class="card-img-top" src="thumbnails/podcast.png" alt="">
-				</a>
-				<div class="card-body">
-					<a href="<?= $player . $streamId?>">
-						<h4 class="card-title">Podcast</h4>
+			$streamId = ''; ?>
+			<div class="col-md-3 mb-5">
+				<div class="card h-100 shadow">
+					<a href="#" class="position-relative"> <?php
+						date_default_timezone_set('UTC');
+						$current = date('Y-m-d H:i', time());
+ 						if ($current < '2020-05-07 17:00') { ?>
+							<div class="ribbon ribbon-green">Upcoming event (<script>printDateTime(1588870800)</script>)</div> <?php
+						} else if ($current < '2020-05-07 17:30') { ?>
+							<div class="ribbon ribbon-red">On air</div> <?php
+						} ?>
+						<img class="card-img-top" src="thumbnails/skynet_dev_workshop.jpg" alt="">
 					</a>
-					<div class="card-text">Sia's David Vorick: Outcompeting Amazon Web Services, a $35B Revenue Giant</div>
+					<div class="card-body">
+						<a href="#">
+							<h4 class="card-title">Skynet Workshop for Developers</h4>
+						</a>
+						<div class="card-text">Thursday at 1 pm ET (UTC 2020-05-07 17:00)</div>
+					</div>
 				</div>
-			</div>
-		</div> <?php
+			</div> <?php
+
+			$streamId = 'podcast'; ?>
+			<div class="col-md-3 mb-5">
+				<div class="card h-100 shadow">
+					<a href="<?= $player . $streamId?>" class="position-relative">
+						<img class="card-img-top" src="thumbnails/podcast.png" alt="">
+					</a>
+					<div class="card-body">
+						<a href="<?= $player . $streamId?>">
+							<h4 class="card-title">Podcast</h4>
+						</a>
+						<div class="card-text">Sia's David Vorick: Outcompeting Amazon Web Services, a $35B Revenue Giant</div>
+					</div>
+				</div>
+			</div> <?php
 
 			$streamId = 'obws'; ?>
 			<div class="col-md-3 mb-5">
