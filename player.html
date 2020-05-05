@@ -1,7 +1,8 @@
+<!DOCTYPE html>
 <head>
-
-    <title>SkyLive 0.52 beta</title>
+    <title>SkyLive 0.63 beta</title>
     <meta name="viewport" content="width=device-width, user-scalable=yes" />
+    <meta charset="utf8"/>
     <link href="https://unpkg.com/video.js@6.7.1/dist/video-js.css" rel="stylesheet">
     <script src="https://unpkg.com/video.js@6.7.1/dist/video.js"></script>
     <script src="https://unpkg.com/@videojs/http-streaming@0.9.0/dist/videojs-http-streaming.js"></script>
@@ -80,8 +81,8 @@
 
         #chat {
             display: none;
-            border:none;
-            height:100%;
+            border: none;
+            height: 100vh;
         }
 
         /* CHAT MODE */
@@ -100,13 +101,74 @@
             display: block;
         }
 
-        .chatmode .logo {
+        .chatmode .logo, .chatmode #portal-switcher {
             display: none;
+        }
+
+        .noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none; /* Safari */
+            -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Old versions of Firefox */
+                -ms-user-select: none; /* Internet Explorer/Edge */
+                    user-select: none; /* Non-prefixed version, currently
+                                        supported by Chrome, Opera and Firefox */
+        }
+
+        /* portal switch dropdown */
+        #portal-switcher {
+            padding: 20px;
+            position: absolute;
+            right: 0;
+        }
+
+        /*hide the inputs/checkmarks and submenu*/
+        #portal-switcher input, #portal-switcher ul.submenu {
+            display: none;
+            position: absolute;
+            z-index: 100;
+            padding: 0px;
+            margin: 0px;
+            background: #101a2c;
+            list-style-type: none;
+        }
+
+        #portal-switcher ul.submenu li {
+            padding: 10px 0px;
+        }
+
+        #portal-switcher ul.submenu li:hover {
+            background: #090e18;
+        }
+
+        #portal-switcher ul.submenu a {
+            color: #FFF;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+
+        /*position the label*/
+        #portal-switcher label {
+            position: relative;
+            display: block;
+            cursor: pointer;
+        }
+
+        /*show the submenu when input is checked*/
+        #portal-switcher input:checked~ul.submenu {
+            display: block;
         }
     </style>
 </head>
 <body>
     <div class="player-container">
+        <div id="portal-switcher">
+            <input id="check01" type="checkbox" name="menu" />
+            <label for="check01" class="noselect" style="opacity: 0.7;">Change Skynet portal server ▼</label>
+            <ul class="submenu" id="portal_list">
+                <li id="loading_portals"><a href="#">Loading portals...</a></li>
+            </ul>
+        </div>
         <a href="https://skylive.coolhd.hu" class="logo">SkyLive</a>
         <video-js id="my_video_1" class="vjs-default-skin vjs-16-9" controls preload="auto" width="70%">
             <source id="src" type="application/x-mpegURL">
@@ -161,17 +223,32 @@
 
     <script>
 
-        chatmode = 0
+    chatmode = 0
 
-        function switchMode() {
-            if (chatmode == 0) {
-                $('body').addClass('chatmode')
-                chatmode = 1
-            } else {
-                $('body').removeClass('chatmode')
-                chatmode = 0
-            }
+    function switchMode() {
+        if (chatmode == 0) {
+            $('body').addClass('chatmode')
+            chatmode = 1
+        } else {
+            $('body').removeClass('chatmode')
+            chatmode = 0
         }
+    }
+
+    // portal list
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("loading_portals").remove()
+            let portals = JSON.parse(this.responseText);
+            portals.forEach(portal => {
+                url = portal.link + window.location.pathname + window.location.search
+                document.getElementById("portal_list").innerHTML += '<li><a href="' + url + '">' + portal.name + '</a></li>'
+            });
+        }
+    };
+    xhttp.open("GET", "https://siastats.info/dbs/skynet_current.json", true);
+    xhttp.send();
 
 
     // Chat button

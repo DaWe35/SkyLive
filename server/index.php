@@ -1,5 +1,5 @@
 <?php
-$player = 'https://siasky.net/EAC9z7PbbcjGDCUCLXttSQ8MGY_D_4zOZEwj6gAORVYrAg?stream=';
+$player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?stream=';
 
 ?>
 <!DOCTYPE html>
