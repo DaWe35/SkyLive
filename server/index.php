@@ -62,10 +62,10 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 	<div class="container-fluid">
 		<div class="row mt-5 mr-2 ml-2"> <?php
 
-			$streamId = ''; ?>
+			$streamId = 'workshop'; ?>
 			<div class="col-md-3 mb-5">
 				<div class="card h-100 shadow">
-					<a href="#" class="position-relative"> <?php
+					<a href="<?= $player . $streamId?>" class="position-relative"> <?php
 						date_default_timezone_set('UTC');
 						$current = date('Y-m-d H:i', time());
  						if ($current < '2020-05-07 17:00') { ?>
@@ -73,10 +73,10 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 						} else if ($current < '2020-05-07 17:30') { ?>
 							<div class="ribbon ribbon-red">On air</div> <?php
 						} ?>
-						<img class="card-img-top" src="thumbnails/skynet_dev_workshop.jpg" alt="">
+						<img class="card-img-top" src="thumbnails/skynet_dev_workshop.png" alt="">
 					</a>
 					<div class="card-body">
-						<a href="#">
+						<a href="<?= $player . $streamId?>">
 							<h4 class="card-title">Skynet Workshop for Developers</h4>
 						</a>
 						<div class="card-text">Thursday at 1 pm ET (UTC 2020-05-07 17:00)</div>
