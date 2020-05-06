@@ -1,21 +1,30 @@
 # Skylive
-Live HLS video streams hosted on Skynet
+
+Live HLS video streams hosted on Skynet. SkylLive is under heavy development, streaming will be much more easyer in some weeks for non-tech users.
 
 ![How SkyLive works](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/how%20it%20works.jpg)
 
 Demo: https://siasky.net/AAA5tBYYnuMhMl1qRV-bphSTyPsZ9JlAtKkJ21gJhSEu2g/index.html
 
-First live: https://siasky.net/EACSRCJLMtS-P6tpGNr1ZMCGFBbWXKoNKTHV_3l81jLE1Q
+First live on Skynet: https://siasky.net/EACSRCJLMtS-P6tpGNr1ZMCGFBbWXKoNKTHV_3l81jLE1Q
 
-Download first live in mp4: https://siasky.net/CADUOqGUR0us09iZrSAAq6Qj5MrI2GrFqtdEiUKwkyZllA
+Explore streams: https://skylive.coolhd.hu
 
-# Setup
+# Setup HSL streamer
+
+`stream_hls.py` will upload your `.ts` segment to Skynet, and share the uploaded Skylink with the playlist server (for example https://skylive.coolhd.hu)
 
 - Install python 3.7+
 
 - `cd Skylive && pip install -r requirements.txt`
 
-- Setup a lightweight PHP server for storing the file names only. Upload /server/ contents to a webserver, and `cd public_server_folder & chmod 777 streams`
+- `cp config_default.py config.py` and edit it. Recommended, to benchmark free portals daily `python3 benchmark_portals.py`, and use the better ones for uploading.
+
+- To start uploading, run `python3 stream_hls.py`. After the script started, you can record HLS video into `record_here` folder. Important: the file name must be `live.m3u8`!
+
+# Record HLS
+
+### Record m3u8 with OBS:
 
 - Download & config OBS
 
@@ -55,13 +64,11 @@ Download first live in mp4: https://siasky.net/CADUOqGUR0us09iZrSAAq6Qj5MrI2GrFq
     
       ![OBS filename](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_filename.jpg)
 
-# Start
+**Start stream & OBS**
 
-- Start stream_hls.py: `python stream_hls.py`
+- Always start `python stream_hls.py` before starting the recording!
 
-- Start OBS recording! Enjoy!
-
-# Stop
+**Stop OBS & stream**
 
 - Stop OBS
 
@@ -71,7 +78,17 @@ Download first live in mp4: https://siasky.net/CADUOqGUR0us09iZrSAAq6Qj5MrI2GrFq
 
 - If you want to make the whole playlist replayable, you need to insert `#EXT-X-ENDLIST` to the end of the playlist. Open the `streams` folder on your webserver, and paste it to the current stream file (filename depends on configured *streamid*).
 
-## Export
+### Restream m3u8 from Youtube/Twitch
+
+You can restream any public Youtube/Twitch stream to SkyLive without any transcoding or screen recording. The `stream_downloader.py` will download live stream on-demand, so you can re-upload it to SkyLive with `stream_hls.py`.
+
+Usage: `python3 stream_downloader.py --url=https://www.youtube.com/watch?v=kG5araSvvLI`
+
+# Setup playlist server
+
+- Setup a lightweight PHP server for storing the file names only. Upload /server/ contents to a webserver, and `cd public_server_folder & chmod 777 streams & chmod 777 subscriptions`
+
+#### Export HLS to mp4
 
 After the stream, you can easily convert the .ts chunks into one mp4 file:
 
