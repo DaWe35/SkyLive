@@ -230,8 +230,8 @@ if config.m3u8_list_upload_password == '':
 	print('Playlist server password did not set, please setup config.py (more info in readme.md)')
 	exit(0)
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--record_folder', help='Optional record folder (default: record_here)')
+parser = argparse.ArgumentParser('Upload HLS (m3u8) live stream to SkyLive')
+parser.add_argument('--record_folder', help='Record folder, where m3u8 and ts files are (will be) located (default: record_here)')
 args = parser.parse_args()
 
 concurrent_uploads = 0
