@@ -11,8 +11,7 @@ import requests
 from tabulate import tabulate
 import curses
 from threading import Thread
-
-concurrent_uploads = 0
+import argparse
 
 def runBash(command):
 	os.system(command)
@@ -24,6 +23,8 @@ def touchDir(dir, strict = False):
 		os.mkdir(dir)
 
 def folderIsEmpty(folder):
+	if not os.path.isdir(folder):
+		return True
 	if os.listdir(folder):
 		return False
 	else:    
@@ -155,9 +156,7 @@ def share(fileId, filearr):
 		filearr[fileId].status = 5
 
 def worker(window):
-	global concurrent_uploads
-	projectPath = os.path.dirname(os.path.abspath(__file__))
-	recordFolder = os.path.join(projectPath, "record_here")
+	global concurrent_uploads, projectPath, recordFolder
 	streamedTime = 0
 	nextStreamFilename = 0
 	lastSharedFileId = -1
@@ -195,7 +194,11 @@ def worker(window):
 	cntr = 0
 	while True:
 		if not chech_m3u8(recordFolder):
-			window.addstr(0, 0, 'Waiting for recording, no m3u8 file found in record_here folder (%ds)' %(cntr))
+			if args.record_folder:
+				record_folder_name = args.record_folder
+			else:
+				record_folder_name = 'record_here'
+			window.addstr(0, 0, 'Waiting for recording, no m3u8 file found in ' + record_folder_name + ' folder (%ds)' %(cntr))
 			window.refresh()
 			cntr += 1
 			time.sleep(1)
@@ -227,15 +230,28 @@ if config.m3u8_list_upload_password == '':
 	print('Playlist server password did not set, please setup config.py (more info in readme.md)')
 	exit(0)
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--record_folder', help='Optional record folder (default: record_here)')
+args = parser.parse_args()
+
+concurrent_uploads = 0
 projectPath = os.path.dirname(os.path.abspath(__file__))
-recordFolder = os.path.join(projectPath, "record_here")
+
+# get recordFolder
+if (args.record_folder):
+	if (os.path.isabs(args.record_folder)):
+		recordFolder = args.record_folder
+	else:
+		recordFolder = os.path.join(projectPath, args.record_folder)
+else:
+	recordFolder = os.path.join(projectPath, "record_here")
+
 if not folderIsEmpty(recordFolder):
 	print('Record folder is not empty: ' + recordFolder)
 	print('Are you sure, you want to continue?')
 	input("Press Enter to continue...")
 
 	
-projectPath = os.path.dirname(os.path.abspath(__file__))
 logFile = os.path.join(projectPath, "error_log.txt")
 logging.basicConfig(filename=logFile,
 	filemode='a',

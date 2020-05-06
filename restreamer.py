@@ -33,7 +33,7 @@ def exit_handler():
 
 atexit.register(exit_handler)
 
-parser = argparse.ArgumentParser(description='Process some integers.')
+parser = argparse.ArgumentParser()
 parser.add_argument('--url', help='Video url (for example https://www.youtube.com/watch?v=ASD123', required=True)
 # parser.add_argument('--service', help='SkyLive live stream token. You need to create a new stream on https://skylive.coolhd.hu', required=True)
 # parser.add_argument('--token', help='SkyLive live stream token. You need to create a new stream on https://skylive.coolhd.hu', required=True)
