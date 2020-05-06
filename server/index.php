@@ -1,4 +1,5 @@
 <?php
+include 'config.php';
 $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?stream=';
 
 ?>
@@ -9,8 +10,9 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
+	<meta name="description" content="Decentralized live streams on Sia Skynet">
+	<meta name="author" content="DaWe">
+	<meta property="og:image" content="<?= URL ?>assets/logos/logo1.jpg" />
 
 	<title>Skylive</title>
 
