@@ -14,7 +14,7 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 	<meta name="author" content="DaWe">
 	<meta property="og:image" content="<?= URL ?>assets/logos/logo1.jpg" />
 
-	<title>Skylive</title>
+	<title>SkyLive</title>
 
 	<!-- Bootstrap core CSS -->
 	<link href="assets/bootstrap.min.css" rel="stylesheet">
