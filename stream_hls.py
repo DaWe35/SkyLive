@@ -144,7 +144,7 @@ def share(fileId, filearr):
 	filearr[fileId].status = 4
 	post = {
 		'password': config.m3u8_list_upload_password,
-		'streamid': config.streamId,
+		'streamid': streamId,
 		'url': filearr[fileId].skylink,
 		'length': filearr[fileId].length
 		}
@@ -250,6 +250,8 @@ if not folderIsEmpty(recordFolder):
 	print('Record folder is not empty: ' + recordFolder)
 	print('Are you sure, you want to continue?')
 	input("Press Enter to continue...")
+
+streamId = input("Enter stream id: ")
 
 	
 logFile = os.path.join(projectPath, "error_log.txt")
