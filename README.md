@@ -1,6 +1,6 @@
 # Skylive
 
-Live HLS video streams hosted on Skynet. SkylLive is under heavy development, streaming will be much more easyer in some weeks for non-tech users.
+Live HLS video streams hosted on Skynet. SkyLive is under heavy development, streaming will be much more easyer in some weeks for non-tech users.
 
 ![How SkyLive works](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/how%20it%20works.jpg)
 
