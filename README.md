@@ -57,7 +57,7 @@ Download first live in mp4: https://siasky.net/CADUOqGUR0us09iZrSAAq6Qj5MrI2GrFq
 
 # Start
 
-- Start uploader.py: `python uploader.py`
+- Start stream_hls.py: `python stream_hls.py`
 
 - Start OBS recording! Enjoy!
 
@@ -65,9 +65,9 @@ Download first live in mp4: https://siasky.net/CADUOqGUR0us09iZrSAAq6Qj5MrI2GrFq
 
 - Stop OBS
 
-- Uploader.py uploads only the *current chunk - 1*th file. So if your last chunk is `live44.ts`, only `live43.ts` has been uploaded. You need to create an empty file `live45.ts`, if you want to upload the 44th chunk.
+- stream_hls.py uploads only the *current chunk - 1*th file. So if your last chunk is `live44.ts`, only `live43.ts` has been uploaded. You need to create an empty file `live45.ts`, if you want to upload the 44th chunk.
 
-- After each chunk was uploaded, close `uploader.py`
+- After each chunk was uploaded, close `stream_hls.py`
 
 - If you want to make the whole playlist replayable, you need to insert `#EXT-X-ENDLIST` to the end of the playlist. Open the `streams` folder on your webserver, and paste it to the current stream file (filename depends on configured *streamid*).
 
