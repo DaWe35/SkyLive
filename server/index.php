@@ -83,7 +83,7 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 						<a href="<?= $player . $streamId?>">
 							<h4 class="card-title">The Decentralized Financial Crisis: Attacking DeFi</h4>
 						</a>
-						<div class="card-text">Details on <a href="https://www.meetup.com/Open-Blockchain-Workshop-Series/events/270437669/">Meetup</a></div>
+						<a href="https://www.meetup.com/Open-Blockchain-Workshop-Series/events/270437669/" class="card-text">Event info</a>
 					</div>
 				</div>
 			</div> <?php
@@ -107,7 +107,8 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 						<a href="<?= $player . $streamId?>">
 							<h4 class="card-title">Skynet Workshop for Developers</h4>
 						</a>
-						<div class="card-text">Thursday at 1 pm ET (UTC 2020-05-07 17:00)</div>
+						A workshop on Skynet by our core dev Marcin.<br>
+						<a href="https://siasky.net/AACIT04DOE_I4uZXCfpzQeDRND6FXH6HCYEJ0VOT4p24tA" class="card-text">Download in mp4</a>
 					</div>
 				</div>
 			</div> <?php
@@ -147,21 +148,6 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 						</a>
 						A hands-on workshop with David Molnar from Wasabi Wallet.<br>
 						<a href="https://www.meetup.com/Open-Blockchain-Workshop-Series/events/269152809/" class="card-text">Event info</a><br>
-					</div>
-				</div>
-			</div> <?php
-
-			$streamId = 'long_test'; ?>
-			<div class="col-md-3 mb-5">
-				<div class="card h-100 shadow">
-					<a href="<?= $player . $streamId?>" class="position-relative">
-						<img class="card-img-top" src="thumbnails/long_test.png" alt="">
-					</a>
-					<div class="card-body">
-						<a href="<?= $player . $streamId?>">
-							<h4 class="card-title">3 hour live test</h4>
-						</a>
-						<div class="card-text">Just a boring 10s HLS chunk testing live with Minecraft & DJ show. After 2 hours <a href="https://github.com/DaWe35/SkyLive/issues/16" title="Open the issue">uploading slowed down</a>, and delay increased</div>
 					</div>
 				</div>
 			</div> <?php
