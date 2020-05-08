@@ -5,7 +5,8 @@ header("Access-Control-Allow-Origin: *");
 if (!isset($_GET['streamid']) || strlen($_GET['streamid']) <= 1) {
     exit('Empty GET value: streamid');
 }
-$streamid = preg_replace('/[^a-zA-Z0-9]/', '', $_GET['streamid']);
+$streamid = filter_var($_GET['streamid'], FILTER_SANITIZE_STRING);
+$streamid = preg_replace('/[^a-zA-Z0-9]/', '', $streamid);
 if (empty($streamid) || strlen($streamid) <= 1) {
     exit('Wrong stream id');
 }
@@ -28,7 +29,8 @@ if (file_exists($file)) {
 $content = fread($myfile,filesize($file));
 if (isset($_GET['portal']) && !empty($_GET['portal'])) {
     
-    $content = str_replace("https://siasky.net",$_GET['portal'],$content);
+    $portal = filter_var($_GET['portal'], FILTER_SANITIZE_URL);
+    $content = str_replace("https://siasky.net", $portal, $content);
 
 }
 echo $content;
