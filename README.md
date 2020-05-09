@@ -2,6 +2,8 @@
 
 Live HLS video streams hosted on Skynet. SkyLive is under heavy development, streaming will be much more easyer in some weeks for non-tech users.
 
+[Check out our roadmap](https://github.com/DaWe35/SkyLive/projects/3)
+
 ![How SkyLive works](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/how%20it%20works.jpg)
 
 Demo: https://siasky.net/AAA5tBYYnuMhMl1qRV-bphSTyPsZ9JlAtKkJ21gJhSEu2g/index.html
