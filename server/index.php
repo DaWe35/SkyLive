@@ -64,6 +64,31 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 	<div class="container-fluid">
 		<div class="row mt-5 mr-2 ml-2"> <?php
 
+			$streamId = 'obws3';
+			$event_time = 1591963200;
+			$event_end_time = 1591974000; ?>
+			<div class="col-md-3 mb-5">
+				<div class="card h-100 shadow">
+					<a href="<?= $player . $streamId?>" class="position-relative"> <?php
+						date_default_timezone_set('UTC');
+						$current = time();
+						if ($current < $event_time) { ?>
+							<div class="ribbon ribbon-green">Upcoming event (<script>printDateTime(<?= $event_time ?>)</script>)</div> <?php
+						} else if ($current < $event_end_time) { ?>
+							<div class="ribbon ribbon-red">On air</div> <?php
+						} ?>
+						<img class="card-img-top" src="thumbnails/obws3.png" alt="">
+					</a>
+					<div class="card-body">
+						<a href="<?= $player . $streamId?>">
+							<h4 class="card-title">Attacking the DeFi Ecosystem with Flash Loans for Fun and Profit</h4>
+						</a>
+						<a href="https://www.meetup.com/Open-Blockchain-Workshop-Series/events/270606440/" class="card-text">Event info</a><br>
+						<a href="https://us02web.zoom.us/j/89814498348" class="card-text">Join meeting</a>
+					</div>
+				</div>
+			</div> <?php
+
 			$streamId = 'obws2';
 			$event_time = 1589904000;
 			$event_end_time = 1589914800; ?>
@@ -83,7 +108,8 @@ $player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?str
 						<a href="<?= $player . $streamId?>">
 							<h4 class="card-title">The Decentralized Financial Crisis: Attacking DeFi</h4>
 						</a>
-						<a href="https://www.meetup.com/Open-Blockchain-Workshop-Series/events/270437669/" class="card-text">Event info</a>
+						<a href="https://www.meetup.com/Open-Blockchain-Workshop-Series/events/270437669/" class="card-text">Event info</a><br>
+						<a href="https://us02web.zoom.us/j/87278019230" class="card-text">Join meeting</a>
 					</div>
 				</div>
 			</div> <?php
