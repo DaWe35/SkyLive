@@ -1,6 +1,6 @@
 <?php
 include 'config.php';
-$player = 'https://siasky.net/GACBp1IOURtbxtEneB48Xo6ibidUtU0Us9U5oJMwZr8Ksg?stream=';
+$player = 'https://siasky.net/GAC3_7_4v91DI5qIMSHb2xAyJ2NVxqVgFBFPEbUwXH3KIQ?stream=';
 
 ?>
 <!DOCTYPE html>

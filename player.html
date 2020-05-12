@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title>SkyLive 0.63 beta</title>
+    <title>SkyLive 0.84 beta</title>
     <meta name="viewport" content="width=device-width, user-scalable=yes" />
     <meta charset="utf8"/>
     <link href="https://unpkg.com/video.js@6.7.1/dist/video-js.css" rel="stylesheet">
@@ -70,12 +70,27 @@
         }
 
 
+        
+        #portal-switch-text-long {
+            display: none;
+        }
+        #portal-switch-text-short {
+            display: block;
+        }
+        
+
         @media (min-width: 900px) {
             .player-container {
                 width: 80%;
             }
             .chatmode #chat {
                 width: 20% !important;
+            }
+            #portal-switch-text-long {
+                display: block;
+            }
+            #portal-switch-text-short {
+                display: none;
             }
         }
 
@@ -131,6 +146,7 @@
             margin: 0px;
             background: #101a2c;
             list-style-type: none;
+            right: 5px;
         }
 
         #portal-switcher ul.submenu li {
@@ -164,7 +180,10 @@
     <div class="player-container">
         <div id="portal-switcher">
             <input id="check01" type="checkbox" name="menu" />
-            <label for="check01" class="noselect" style="opacity: 0.7;">Change Skynet portal server ▼</label>
+            <label for="check01" class="noselect" style="opacity: 0.7;">
+                <span id="portal-switch-text-long">Change Skynet portal server ▼</span>
+                <span id="portal-switch-text-short">Portal ▼</span>
+            </label>
             <ul class="submenu" id="portal_list">
                 <li id="loading_portals"><a href="#">Loading portals...</a></li>
             </ul>
@@ -186,9 +205,10 @@
         if (urlParams.has('portal') && urlParams.has('portal') != '') {
             var portal = urlParams.get('portal'); // "edit"
         } else {
-            var portal   = window.location.origin;        }
+            var portal   = window.location.origin;
+        }
         
-        if (portal == null) {
+        if (portal == null || portal == 'https://skylive.local' || portal == 'http://skylive.local' || portal == 'https://localhost' || portal == 'http://localhost') {
             portal = 'https://siasky.net'
         }
         console.log('Using portal: ' + portal)
