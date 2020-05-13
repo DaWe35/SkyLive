@@ -6,35 +6,31 @@ if (!isset($_POST['token']) || empty($_POST['token'])) {
 }
 
 require 'model/get_streamid_from_token.php';
-$stream_id = get_streamid_from_token($_POST['token']);
+$streamid = get_streamid_from_token($_POST['token']);
 
 if (!isset($_POST['length']) || floatval($_POST['length']) <= 0) {
+    header('HTTP/1.0 400 Bad Request');
     exit('Wrong value for length');
 }
 
 if (!isset($_POST['url']) || strlen($_POST['url']) <= 0) {
+    header('HTTP/1.0 400 Bad Request');
     exit('Wrong value for url');
-}
-
-if (!isset($_POST['url']) || strlen($_POST['url']) <= 0) {
-    exit('Wrong value for url');
-}
-
-if (!isset($_POST['streamid']) || strlen($_POST['streamid']) <= 0) {
-    exit('Wrong value for streamid');
-}
-$streamid = filter_var($_POST['streamid'], FILTER_SANITIZE_STRING);
-$streamid = preg_replace('/[^a-zA-Z0-9]/', '', $streamid);
-if (empty($streamid) || strlen($streamid) <= 1) {
-    exit('Wrong stream id');
 }
 
 $length = filter_var($_POST['length'], FILTER_SANITIZE_NUMBER_FLOAT);
 $url = filter_var($_POST['url'], FILTER_SANITIZE_URL);
+if (isset($_POST['first_chunk'])) {
+    $is_first_chunk = 1;
+} else {
+    $is_first_chunk = 0;
+}
 
-$file = "streams/" . $streamid. ".txt";
-touch($file);
-file_put_contents($file, "#EXTINF:" . $length . ",\n", FILE_APPEND);
-file_put_contents($file, $url . "\n", FILE_APPEND);
+$stmt = $db->prepare("INSERT INTO chunks (`streamid`, `length`, `skylink`, `is_first_chunk`, `resolution`) VALUES (?, ?, ?, ?, 'original')");
+if (!$stmt->execute([$streamid, $length, $url, $is_first_chunk])) {
+    header('HTTP/1.0 500 Internal Server Error');
+    exit('Database error');
+}
+$stmt = null;
 
 echo 'ok';

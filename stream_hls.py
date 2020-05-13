@@ -65,7 +65,6 @@ def upload(saveTo, fileId, length, filearr):
 		filearr[fileId].status = 6
 
 	siaskylink = skylink.replace("sia://", "")
-	siaskylink = 'https://siasky.net/' + siaskylink
 	filearr[fileId].skylink = siaskylink
 	if filearr[fileId].status != 6:
 		filearr[fileId].status = 3
@@ -141,10 +140,10 @@ def updateDisplay(window, filearr, symbols):
 	window.refresh()
 
 def share(fileId, filearr):
+	global m3u8_list_upload_token
 	filearr[fileId].status = 4
 	post = {
-		'password': config.m3u8_list_upload_password,
-		'streamid': streamId,
+		'token': m3u8_list_upload_token,
 		'url': filearr[fileId].skylink,
 		'length': filearr[fileId].length
 		}
@@ -226,9 +225,7 @@ def worker(window):
 			share(nextToShare, filearr)
 			lastSharedFileId += 1
 
-if config.m3u8_list_upload_password == '':
-	print('Playlist server password did not set, please setup config.py (more info in readme.md)')
-	exit(0)
+
 
 parser = argparse.ArgumentParser('Upload HLS (m3u8) live stream to SkyLive')
 parser.add_argument('--record_folder', help='Record folder, where m3u8 and ts files are (will be) located (default: record_here)')
@@ -248,11 +245,9 @@ else:
 
 if not folderIsEmpty(recordFolder):
 	print('Record folder is not empty: ' + recordFolder)
-	print('Are you sure, you want to continue?')
-	input("Press Enter to continue...")
+	input('Are you sure, you want to continue? Press Enter to continue...')
 
-streamId = input("Enter stream id: ")
-
+m3u8_list_upload_token = input("Enter stream token: ")
 	
 logFile = os.path.join(projectPath, "error_log.txt")
 logging.basicConfig(filename=logFile,
