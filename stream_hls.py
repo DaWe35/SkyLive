@@ -140,12 +140,13 @@ def updateDisplay(window, filearr, symbols):
 	window.refresh()
 
 def share(fileId, filearr):
-	global m3u8_list_upload_token
+	global m3u8_list_upload_token, is_first_chunk
 	filearr[fileId].status = 4
 	post = {
 		'token': m3u8_list_upload_token,
 		'url': filearr[fileId].skylink,
-		'length': filearr[fileId].length
+		'length': filearr[fileId].length,
+		'is_first_chunk': is_first_chunk
 		}
 	x = requests.post(config.m3u8_list_upload_path, data = post)
 	if (x.text != 'ok'):
@@ -153,6 +154,7 @@ def share(fileId, filearr):
 		filearr[fileId].status = 6
 	else:
 		filearr[fileId].status = 5
+		is_first_chunk = 0
 
 def worker(window):
 	global concurrent_uploads, projectPath, recordFolder
@@ -233,6 +235,7 @@ args = parser.parse_args()
 
 concurrent_uploads = 0
 projectPath = os.path.dirname(os.path.abspath(__file__))
+is_first_chunk = 1
 
 # get recordFolder
 if (args.record_folder):

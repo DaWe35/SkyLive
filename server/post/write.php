@@ -20,7 +20,7 @@ if (!isset($_POST['url']) || strlen($_POST['url']) <= 0) {
 
 $length = filter_var($_POST['length'], FILTER_SANITIZE_NUMBER_FLOAT);
 $url = filter_var($_POST['url'], FILTER_SANITIZE_URL);
-if (isset($_POST['first_chunk'])) {
+if (isset($_POST['is_first_chunk']) && $_POST['is_first_chunk'] == 1) {
     $is_first_chunk = 1;
 } else {
     $is_first_chunk = 0;
