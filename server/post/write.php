@@ -36,7 +36,7 @@ $stmt = null;
 // Update stream status: started
 $stmt = $db->prepare("UPDATE stream SET started = 1 WHERE token = ?");
 if (!$stmt->execute([$_POST['token']])) {
-    exit('Database error');
+    exit('Database error 2');
 }
 $stmt = null;
 

@@ -29,7 +29,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             break;
         case 'original':
             echo '#EXT-X-STREAM-INF:BANDWIDTH=1924009,CODECS="mp4a.40.2, avc1.4d401f",RESOLUTION=1920x1080' . "\n";
-            echo "stream_resolution?streamid=" . $streamid . "&resolution=1080\n\n";
+            echo "stream_resolution?streamid=" . $streamid . "&resolution=original\n\n";
             break;
         
         default:
