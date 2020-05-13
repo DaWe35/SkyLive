@@ -18,7 +18,7 @@ if (!isset($_POST['url']) || strlen($_POST['url']) <= 0) {
     exit('Wrong value for url');
 }
 
-$length = filter_var($_POST['length'], FILTER_SANITIZE_NUMBER_FLOAT);
+
 $url = filter_var($_POST['url'], FILTER_SANITIZE_URL);
 if (isset($_POST['is_first_chunk']) && $_POST['is_first_chunk'] == 1) {
     $is_first_chunk = 1;
@@ -27,8 +27,15 @@ if (isset($_POST['is_first_chunk']) && $_POST['is_first_chunk'] == 1) {
 }
 
 $stmt = $db->prepare("INSERT INTO chunks (`streamid`, `length`, `skylink`, `is_first_chunk`, `resolution`) VALUES (?, ?, ?, ?, 'original')");
-if (!$stmt->execute([$streamid, $length, $url, $is_first_chunk])) {
+if (!$stmt->execute([$streamid, $_POST['length'], $url, $is_first_chunk])) {
     header('HTTP/1.0 500 Internal Server Error');
+    exit('Database error');
+}
+$stmt = null;
+
+// Update stream status: started
+$stmt = $db->prepare("UPDATE stream SET started = 1 WHERE token = ?");
+if (!$stmt->execute([$_POST['token']])) {
     exit('Database error');
 }
 $stmt = null;

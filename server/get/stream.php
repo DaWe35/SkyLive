@@ -2,21 +2,26 @@
 
 header("Content-Type: text/plain");
 header("Access-Control-Allow-Origin: *");
-if (!isset($_GET['streamid']) || strlen($_GET['streamid']) <= 1) {
+if (!isset($_GET['streamid']) || strlen($_GET['streamid']) < 1) {
     exit('Empty GET value: streamid');
 }
-$streamid = filter_var($_GET['streamid'], FILTER_SANITIZE_STRING);
-$streamid = preg_replace('/[^a-zA-Z0-9]/', '', $streamid);
-if (empty($streamid) || strlen($streamid) <= 1) {
-    exit('Wrong stream id');
-}
 
-$file = "streams/" . $streamid. ".txt";
-if (file_exists($file)) {
-    $myfile = fopen($file, "r") or die("Unable to open file!");
-} else {
+$stmt = $db->prepare("SELECT `streamid`, `userid`, `title`, `description`, `scheule_time`, `started`, `finished` FROM `stream` WHERE streamid = ? LIMIT 1");
+if (!$stmt->execute([$_GET['streamid']])) {
+    exit('Database error');
+}
+$stream = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt = null;
+
+if (!isset($stream['streamid'])) {
     http_response_code(404);
     exit('Stream not found');
+}
+
+if (isset($_GET['portal']) && !empty($_GET['portal'])) {
+    $portal = filter_var($_GET['portal'], FILTER_SANITIZE_URL);
+} else {
+    $portal = 'https://siasky.net';
 }
 
 ?>
@@ -26,13 +31,30 @@ if (file_exists($file)) {
 #EXT-X-MEDIA-SEQUENCE:0
 
 <?php
-$content = fread($myfile,filesize($file));
-if (isset($_GET['portal']) && !empty($_GET['portal'])) {
-    
-    $portal = filter_var($_GET['portal'], FILTER_SANITIZE_URL);
-    $content = str_replace("https://siasky.net", $portal, $content);
-
+if ($stream['started'] == 0) {
+    echo "#EXTINF:10.023223,\n";
+    echo $portal . "/PAHFBBORe9Ws46Yuok_-Ew4uBt6x9Ry3Kom00ZSYcHDzGg\n";
+} else {
+    $stmt = $db->prepare("SELECT `id`, `streamid`, `length`, `skylink`, `is_first_chunk`, `resolution` FROM `chunks` WHERE streamid = ? ORDER BY id ASC");
+    if (!$stmt->execute([$stream['streamid']])) {
+        exit('Database error');
+    }
+    $start_chunk = true;
+    while ($chunk = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if ($chunk['is_first_chunk'] == 1 && $start_chunk == false) {
+            echo "#EXT-X-DISCONTINUITY\n";
+        }
+        echo "#EXTINF:{$chunk['length']},\n";
+        echo "{$portal}/{$chunk['skylink']}\n";
+        $start_chunk = false;
+    }
+    $stmt = null;
 }
-echo $content;
-fclose($myfile);
+
+
+if ($stream['finished'] == 1) {
+    echo "#EXT-X-ENDLIST\n";
+}
+
+
 exit(); // Don't include model.display.php
