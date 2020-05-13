@@ -1,11 +1,12 @@
 <?php
-require 'config.php';
-if (PASSWORD == '') {
-    exit('Password not found in config.php');
-}
-if (!isset($_POST['password']) || $_POST['password'] !== PASSWORD) {
+
+if (!isset($_POST['token']) || empty($_POST['token'])) {
+    header('HTTP/1.0 403 Forbidden');
     exit('Access denied');
 }
+
+require 'model/get_streamid_from_token.php';
+$stream_id = get_streamid_from_token($_POST['token']);
 
 if (!isset($_POST['length']) || floatval($_POST['length']) <= 0) {
     exit('Wrong value for length');

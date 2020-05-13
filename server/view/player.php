@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <head>
-    <title>SkyLive 0.84 beta</title>
+    <title>SkyLive 0.85 beta</title>
     <meta name="viewport" content="width=device-width, user-scalable=yes" />
     <meta charset="utf8"/>
     <link href="https://unpkg.com/video.js@6.7.1/dist/video-js.css" rel="stylesheet">
     <script src="https://unpkg.com/video.js@6.7.1/dist/video.js"></script>
     <script src="https://unpkg.com/@videojs/http-streaming@0.9.0/dist/videojs-http-streaming.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <style>
         body {
@@ -188,7 +187,7 @@
                 <li id="loading_portals"><a href="#">Loading portals...</a></li>
             </ul>
         </div>
-        <a href="https://skylive.coolhd.hu" class="logo">SkyLive</a>
+        <a href="<?= URL ?>" class="logo">SkyLive</a>
         <video-js id="my_video_1" class="vjs-default-skin vjs-16-9" controls preload="auto" width="70%">
             <source id="src" type="application/x-mpegURL">
         </video-js>
@@ -212,7 +211,7 @@
             portal = 'https://siasky.net'
         }
         console.log('Using portal: ' + portal)
-        $('#src').attr("src", "https://skylive.coolhd.hu/stream.php?portal=" + portal + "&streamid=" + streamid)
+        $('#src').attr("src", "<?= URL ?>stream.php?portal=" + portal + "&streamid=" + streamid)
 
 
         var overrideNative = true;

@@ -1,0 +1,14 @@
+Options -Indexes
+
+RewriteEngine On
+
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+RewriteCond %{REQUEST_URI} !=/index.php
+RewriteCond %{REQUEST_URI} !.*\.png$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.jpg$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.css$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.gif$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.js$ [NC]
+RewriteCond %{REQUEST_URI} !.*\.svg$ [NC]
+RewriteRule ^(.*)$ index.php?geturl=$1 [L,QSA]

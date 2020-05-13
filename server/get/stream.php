@@ -35,3 +35,4 @@ if (isset($_GET['portal']) && !empty($_GET['portal'])) {
 }
 echo $content;
 fclose($myfile);
+exit(); // Don't include model.display.php
