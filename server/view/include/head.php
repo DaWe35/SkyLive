@@ -12,7 +12,7 @@
 <script src="assets/jquery.min.js"></script>
 
 <!-- Custom styles for this template -->
-<link href="style.css" rel="stylesheet">
+<link href="assets/style.css" rel="stylesheet">
 <script>
   function printDateTime(datetime) {
     var evtm = new Date(parseInt(datetime*1000)).toLocaleString([], {year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute:'2-digit'})

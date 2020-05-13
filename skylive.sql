@@ -22,10 +22,11 @@ CREATE TABLE `chunks` (
   `resolution` enum('1080','1080@60','720','720@60','360','360@60','original') COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+
 CREATE TABLE `newsletter` (
-  `email` int(11) NOT NULL,
-  `subscribtion_time` datetime NOT NULL,
-  `ip` int(11) NOT NULL
+  `email` varchar(63) COLLATE utf8_bin NOT NULL,
+  `subscribtion_time` int(11) UNSIGNED NOT NULL,
+  `ip` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 CREATE TABLE `stream` (
@@ -34,7 +35,7 @@ CREATE TABLE `stream` (
   `userid` int(11) NOT NULL,
   `title` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `description` text COLLATE utf8_bin,
-  `scheule_time` datetime DEFAULT NULL,
+  `scheule_time` int(11) UNSIGNED DEFAULT NULL,
   `started` tinyint(1) NOT NULL,
   `finished` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -45,6 +46,7 @@ CREATE TABLE `users` (
   `password` varchar(63) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(127) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `avatar` varchar(127) NOT NULL,
+  `reg_time` int(10) UNSIGNED NOT NULL,
   `rank` enum('unverified','user','admin') DEFAULT 'unverified',
   `badlogin` tinyint(4) DEFAULT '0',
   `loginban` tinyint(1) DEFAULT '0'
@@ -54,6 +56,9 @@ CREATE TABLE `users` (
 ALTER TABLE `chunks`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `newsletter`
+  ADD PRIMARY KEY (`email`);
+
 ALTER TABLE `stream`
   ADD PRIMARY KEY (`streamid`);
 
@@ -62,10 +67,10 @@ ALTER TABLE `users`
 
 
 ALTER TABLE `chunks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1594;
 
 ALTER TABLE `stream`
-  MODIFY `streamid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `streamid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
