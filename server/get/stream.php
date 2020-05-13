@@ -1,60 +1,44 @@
 <?php
-
 header("Content-Type: text/plain");
 header("Access-Control-Allow-Origin: *");
 if (!isset($_GET['streamid']) || strlen($_GET['streamid']) < 1) {
     exit('Empty GET value: streamid');
 }
+$streamid = htmlspecialchars($_GET['streamid']);
 
-$stmt = $db->prepare("SELECT `streamid`, `userid`, `title`, `description`, `scheule_time`, `started`, `finished` FROM `stream` WHERE streamid = ? LIMIT 1");
+
+$stmt = $db->prepare("SELECT `resolution` FROM `chunks` WHERE streamid = ? GROUP BY `resolution`");
 if (!$stmt->execute([$_GET['streamid']])) {
     exit('Database error');
 }
-$stream = $stmt->fetch(PDO::FETCH_ASSOC);
+echo "#EXTM3U\n\n";
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+    switch ($row['resolution']) {
+        case 360:
+            echo '#EXT-X-STREAM-INF:BANDWIDTH=577610,CODECS="mp4a.40.2, avc1.4d401f",RESOLUTION=640x360' . "\n";
+            echo "stream_resolution?streamid=" . $streamid . "&resolution=360\n\n";
+            break;
+        case 720:
+            echo '#EXT-X-STREAM-INF:BANDWIDTH=1030138,CODECS="mp4a.40.2, avc1.4d401f",RESOLUTION=1280x720' . "\n";
+            echo "stream_resolution?streamid=" . $streamid . "&resolution=720\n\n";
+            break;
+        case 1080:
+            echo '#EXT-X-STREAM-INF:BANDWIDTH=1924009,CODECS="mp4a.40.2, avc1.4d401f",RESOLUTION=1920x1080' . "\n";
+            echo "stream_resolution?streamid=" . $streamid . "&resolution=1080\n\n";
+            break;
+        case 'original':
+            echo '#EXT-X-STREAM-INF:BANDWIDTH=1924009,CODECS="mp4a.40.2, avc1.4d401f",RESOLUTION=1920x1080' . "\n";
+            echo "stream_resolution?streamid=" . $streamid . "&resolution=1080\n\n";
+            break;
+        
+        default:
+            echo '#EXT-X-STREAM-INF:BANDWIDTH=1924009,CODECS="mp4a.40.2, avc1.4d401f",RESOLUTION=1920x1080' . "\n";
+            echo "stream_resolution?streamid=" . $streamid . "&resolution=1080\n\n";
+            break;
+    }
+}
 $stmt = null;
-
-if (!isset($stream['streamid'])) {
-    http_response_code(404);
-    exit('Stream not found');
-}
-
-if (isset($_GET['portal']) && !empty($_GET['portal'])) {
-    $portal = filter_var($_GET['portal'], FILTER_SANITIZE_URL);
-} else {
-    $portal = 'https://siasky.net';
-}
-
-?>
-#EXTM3U
-#EXT-X-VERSION:3
-#EXT-X-TARGETDURATION:10
-#EXT-X-MEDIA-SEQUENCE:0
-
-<?php
-if ($stream['started'] == 0) {
-    echo "#EXTINF:10.023223,\n";
-    echo $portal . "/PAHFBBORe9Ws46Yuok_-Ew4uBt6x9Ry3Kom00ZSYcHDzGg\n";
-} else {
-    $stmt = $db->prepare("SELECT `id`, `streamid`, `length`, `skylink`, `is_first_chunk`, `resolution` FROM `chunks` WHERE streamid = ? ORDER BY id ASC");
-    if (!$stmt->execute([$stream['streamid']])) {
-        exit('Database error');
-    }
-    $start_chunk = true;
-    while ($chunk = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        if ($chunk['is_first_chunk'] == 1 && $start_chunk == false) {
-            echo "#EXT-X-DISCONTINUITY\n";
-        }
-        echo "#EXTINF:{$chunk['length']},\n";
-        echo "{$portal}/{$chunk['skylink']}\n";
-        $start_chunk = false;
-    }
-    $stmt = null;
-}
-
-
-if ($stream['finished'] == 1) {
-    echo "#EXT-X-ENDLIST\n";
-}
 
 
 exit(); // Don't include model.display.php
