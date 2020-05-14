@@ -6,9 +6,34 @@ if (!isset($_GET['streamid']) || strlen($_GET['streamid']) < 1) {
 }
 $streamid = htmlspecialchars($_GET['streamid']);
 
+//backward compatibility
+switch ($streamid) {
+    case 'skylive':
+        $streamid = 1;
+        break;
+    case 'starlink':
+        $streamid = 2;
+        break;
+    case 'obws':
+        $streamid = 3;
+        break;
+    case 'podcast':
+        $streamid = 4;
+        break;
+    case 'workshop':
+        $streamid = 5;
+        break;
+    case 'obws2':
+        $streamid = 6;
+        break;
+    case 'obws3':
+        $streamid = 7;
+        break;
+}
+
 
 $stmt = $db->prepare("SELECT `resolution` FROM `chunks` WHERE streamid = ? GROUP BY `resolution`");
-if (!$stmt->execute([$_GET['streamid']])) {
+if (!$stmt->execute([$streamid])) {
     exit('Database error');
 }
 echo "#EXTM3U\n\n";
