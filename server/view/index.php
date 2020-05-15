@@ -1,5 +1,5 @@
 <?php
-$player = URL . 'player?stream=';
+$player = URL . 'player?s=';
 
 ?>
 <header class="bg-gradient py-5">

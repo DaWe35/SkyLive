@@ -45,7 +45,7 @@
             color: #FFF;
         }
         
-        a[href='https://minnit.chat/SkyLive'] {
+        .minnit-chat-container a[href='https://minnit.chat/SkyLive'] {
             display: none;
         }
 
@@ -189,10 +189,12 @@
         </div>
         <a href="<?= URL ?>" class="logo">SkyLive</a>
         <video-js id="my_video_1" class="vjs-default-skin vjs-16-9" controls preload="auto" width="70%">
-            <source id="src" src="stream?streamid=<?= htmlspecialchars($_GET['stream']) ?>" type="application/x-mpegURL">
+            <source id="src" src="stream?streamid=<?= htmlspecialchars($_GET['s']) ?>&portal=<?= $portal ?>" type="application/x-mpegURL">
         </video-js>
     </div><!--
+--><div class="minnit-chat-container"><!--
     --><iframe id="chat" src="https://minnit.chat/SkyLive?embed&&nickname=" allowTransparency="true"></iframe><br><a href="https://minnit.chat/SkyLive" target="_blank">HTML5 Chatroom powered by Minnit Chat</a>
+    </div>
     <script>
         var urlParams = new URLSearchParams(window.location.search);
 
@@ -261,7 +263,7 @@
             document.getElementById("loading_portals").remove()
             let portals = JSON.parse(this.responseText);
             portals.forEach(portal => {
-                url = portal.link + window.location.pathname + window.location.search
+                url = "/player?s=<?= htmlspecialchars($_GET['s']) ?>&portal=" + portal.link
                 document.getElementById("portal_list").innerHTML += '<li><a href="' + url + '">' + portal.name + '</a></li>'
             });
         }

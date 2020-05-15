@@ -36,25 +36,30 @@ if (isset($_GET['portal']) && !empty($_GET['portal'])) {
 #EXT-X-PLAYLIST-TYPE:VOD
 
 <?php
-if ($stream['started'] == 0) {
-    echo "#EXTINF:10.023223,\n";
-    echo $portal . "/PAHFBBORe9Ws46Yuok_-Ew4uBt6x9Ry3Kom00ZSYcHDzGg\n";
-} else {
-    $stmt = $db->prepare("SELECT `id`, `streamid`, `length`, `skylink`, `is_first_chunk` FROM `chunks` WHERE streamid = ? AND resolution = ? ORDER BY id ASC");
-    if (!$stmt->execute([$stream['streamid'], $_GET['resolution']])) {
-        exit('Database error');
-    }
-    $start_chunk = true;
-    while ($chunk = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        if ($chunk['is_first_chunk'] == 1 && $start_chunk == false) {
-            echo "#EXT-X-DISCONTINUITY\n";
-        }
-        echo "#EXTINF:{$chunk['length']},\n";
-        echo "{$portal}/{$chunk['skylink']}\n";
-        $start_chunk = false;
-    }
-    $stmt = null;
+if ($stream['finished'] == 0) {
+    echo "#EXTINF:10.000000,\n";
+    echo $portal . "/AABa67V-0McynqzloU6CBvHECTY-R8mm6SaB1Smr2pkU1g\n";
+    echo "#EXTINF:10.000000,\n";
+    echo $portal . "/_B2H5ZepchMfdYj1BLjlkZqsGUEhXEA-rxi--80i-1mEGA\n";
+    echo "#EXTINF:4.000000,\n";
+    echo $portal . "/PAO6OSO_yznBInoTofjORkLxBwxIRuPMzg3C3QwFaDcjKg\n";
+    echo "#EXT-X-DISCONTINUITY\n";
 }
+
+$stmt = $db->prepare("SELECT `id`, `streamid`, `length`, `skylink`, `is_first_chunk` FROM `chunks` WHERE streamid = ? AND resolution = ? ORDER BY id ASC");
+if (!$stmt->execute([$stream['streamid'], $_GET['resolution']])) {
+    exit('Database error');
+}
+$start_chunk = true;
+while ($chunk = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    if ($chunk['is_first_chunk'] == 1 && $start_chunk == false) {
+        echo "#EXT-X-DISCONTINUITY\n";
+    }
+    echo "#EXTINF:{$chunk['length']},\n";
+    echo "{$portal}/{$chunk['skylink']}\n";
+    $start_chunk = false;
+}
+$stmt = null;
 
 
 if ($stream['finished'] == 1) {

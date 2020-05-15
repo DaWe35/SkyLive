@@ -250,7 +250,10 @@ if not folderIsEmpty(recordFolder):
 	print('Record folder is not empty: ' + recordFolder)
 	input('Are you sure, you want to continue? Press Enter to continue...')
 
-m3u8_list_upload_token = input("Enter stream token: ")
+while True:
+	m3u8_list_upload_token = input("Enter stream token: ")
+	if (m3u8_list_upload_token):
+		break
 	
 logFile = os.path.join(projectPath, "error_log.txt")
 logging.basicConfig(filename=logFile,
