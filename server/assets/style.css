@@ -53,3 +53,7 @@ a.card-text, a.card-text:hover {
 .ribbon-red {
 	background-color: #C53030;
 }
+
+.minnit-chat-container {
+	display: inline;
+}
