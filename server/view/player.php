@@ -7,187 +7,20 @@
     <script src="https://unpkg.com/video.js@6.7.1/dist/video.js"></script>
     <script src="https://unpkg.com/@videojs/http-streaming@0.9.0/dist/videojs-http-streaming.js"></script>
 
-    <style>
-        body {
-            background: #191d23; /* Old browsers */
-            background: -moz-radial-gradient(center, ellipse cover,  #101a2c  0%, #000000 100%); /* FF3.6+ */
-            background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#101a2c ), color-stop(100%,#000000)); /* Chrome,Safari4+ */
-            background: -webkit-radial-gradient(center, ellipse cover,  #101a2c  0%,#000000 100%); /* Chrome10+,Safari5.1+ */
-            background: -o-radial-gradient(center, ellipse cover,  #101a2c  0%,#000000 100%); /* Opera 12+ */
-            background: -ms-radial-gradient(center, ellipse cover,  #101a2c  0%,#000000 100%); /* IE10+ */
-            background: radial-gradient(ellipse at center,  #101a2c  0%,#000000 100%); /* W3C */
-            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#101a2c ', endColorstr='#000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-            text-align:center;
-            margin: 0;
-            color: #FFF;
-            min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        video {
-            width: 100%;
-            display: inline-block;
-        }
-
-        #player2 {
-            display: none;
-        }
-
-        #playerinfo {
-            display: none;
-        }
-
-        b {
-            font-size: 120%;
-        }
-
-        #button {
-            margin-top: 5px;
-            color: #FFF;
-        }
-        
-        .minnit-chat-container a[href='https://minnit.chat/SkyLive'] {
-            display: none;
-        }
-
-        [class*="BT"]{width:250px;display:block;position:relative;padding:0;border-color:rgba(255,255,255,0.4);margin:0 0 10px;line-height:6px;border-style:solid;left:50%;margin-left:-125px;height:60px;}
-        [class*="BT"] hover{position:absolute;z-index:5;width:246px;margin-left:-370px;  transition: all 0.3s ease-out 0s;    background: -moz-linear-gradient(45deg,  rgba(255,255,255,0) 0%, rgba(135,135,135,0.38) 50%, rgba(255,255,255,0) 100%); /* FF3.6+ */background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(50%,rgba(135,135,135,0.38)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */background: -webkit-linear-gradient(45deg,  rgba(255,255,255,0) 0%,rgba(135,135,135,0.38) 50%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */background: -o-linear-gradient(45deg,  rgba(255,255,255,0) 0%,rgba(135,135,135,0.38) 50%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */background: -ms-linear-gradient(45deg,  rgba(255,255,255,0) 0%,rgba(135,135,135,0.38) 50%,rgba(255,255,255,0) 100%); /* IE10+ */background: linear-gradient(45deg,  rgba(255,255,255,0) 0%,rgba(135,135,135,0.38) 50%,rgba(255,255,255,0) 100%); /* W3C */filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */  height:60px;margin-top:-30px;}
-        [class*="OH"]{overflow:hidden;}
-        [class*="BR"]{border-width:2px;}
-        [class*="R6"]{border-radius:6px;}
-        [class*="NF"]{background:transparent;}
-        [class*="BT"]:hover hover{  margin-left:123px;}
-        [class*="TU"]{text-transform:uppercase;}
-        [class*="PT"]{cursor:pointer;}
-        [class*="BT"] span{  position:absolute;  width:200px;  margin-left:-100px;  z-index:3;}
-        canvas{margin: 0;padding: 0;display:block;position:absolute;margin-top:-30px;}
-
-
-
-        .player-container {
-            width: 100%;
-            display: inline-block
-        }
-
-
-        
-        #portal-switch-text-long {
-            display: none;
-        }
-        #portal-switch-text-short {
-            display: block;
-        }
-        
-
-        @media (min-width: 900px) {
-            .player-container {
-                width: 80%;
-            }
-            .chatmode #chat {
-                width: 20% !important;
-            }
-            #portal-switch-text-long {
-                display: block;
-            }
-            #portal-switch-text-short {
-                display: none;
-            }
-        }
-
-        #chat {
-            display: none;
-            border: none;
-            height: 100vh;
-        }
-
-        /* CHAT MODE */
-        .chatmode #chat {
-            display: inline-block !important;
-            width: 80%;
-        }
-
-        .logo {
-            color: #FFF !important;
-            font-size: 140%;
-            text-decoration: none !important;
-            font-weight: bold;
-            padding: 20px;
-            text-align: center;
-            display: block;
-        }
-
-        .chatmode .logo, .chatmode #portal-switcher {
-            display: none;
-        }
-
-        .noselect {
-        -webkit-touch-callout: none; /* iOS Safari */
-            -webkit-user-select: none; /* Safari */
-            -khtml-user-select: none; /* Konqueror HTML */
-            -moz-user-select: none; /* Old versions of Firefox */
-                -ms-user-select: none; /* Internet Explorer/Edge */
-                    user-select: none; /* Non-prefixed version, currently
-                                        supported by Chrome, Opera and Firefox */
-        }
-
-        /* portal switch dropdown */
-        #portal-switcher {
-            padding: 20px;
-            position: absolute;
-            right: 0;
-        }
-
-        /*hide the inputs/checkmarks and submenu*/
-        #portal-switcher input, #portal-switcher ul.submenu {
-            display: none;
-            position: absolute;
-            z-index: 100;
-            padding: 0px;
-            margin: 0px;
-            background: #101a2c;
-            list-style-type: none;
-            right: 5px;
-        }
-
-        #portal-switcher ul.submenu li {
-            padding: 10px 0px;
-        }
-
-        #portal-switcher ul.submenu li:hover {
-            background: #090e18;
-        }
-
-        #portal-switcher ul.submenu a {
-            color: #FFF;
-            text-decoration: none;
-            padding: 10px 20px;
-        }
-
-        /*position the label*/
-        #portal-switcher label {
-            position: relative;
-            display: block;
-            cursor: pointer;
-        }
-
-        /*show the submenu when input is checked*/
-        #portal-switcher input:checked~ul.submenu {
-            display: block;
-        }
-    </style>
 </head>
-<body>
+<body class="player">
+    <div id="portal-switcher">
+        <input id="check01" type="checkbox" name="menu" />
+        <label for="check01" class="noselect" style="opacity: 0.7;">
+            <span id="portal-switch-text-long">Change Skynet portal server ▼</span>
+            <span id="portal-switch-text-short">Portal ▼</span>
+        </label>
+        <ul class="submenu" id="portal_list">
+            <li id="loading_portals"><a href="#">Loading portals...</a></li>
+        </ul>
+    </div>
+    <a href="<?= URL ?>" class="logo">SkyLive</a>
     <div class="player-container">
-        <div id="portal-switcher">
-            <input id="check01" type="checkbox" name="menu" />
-            <label for="check01" class="noselect" style="opacity: 0.7;">
-                <span id="portal-switch-text-long">Change Skynet portal server ▼</span>
-                <span id="portal-switch-text-short">Portal ▼</span>
-            </label>
-            <ul class="submenu" id="portal_list">
-                <li id="loading_portals"><a href="#">Loading portals...</a></li>
-            </ul>
-        </div>
-        <a href="<?= URL ?>" class="logo">SkyLive</a>
         <video-js id="my_video_1" class="vjs-default-skin vjs-16-9" controls preload="auto" width="70%">
             <source id="src" src="stream?streamid=<?= htmlspecialchars($_GET['s']) ?>&portal=<?= $portal ?>" type="application/x-mpegURL">
         </video-js>
