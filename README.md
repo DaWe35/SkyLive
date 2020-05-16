@@ -88,7 +88,9 @@ Usage: `python3 stream_downloader.py --url=https://www.youtube.com/watch?v=kG5ar
 
 # Setup playlist server
 
-- Setup a lightweight PHP server for storing the file names only. Upload /server/ contents to a webserver, and `cd public_server_folder & chmod 777 streams & chmod 777 subscriptions`
+- Running a you-own SkyLive portal needs PHP and MySQL. On Windows, I recommend wamp.net. The root directory of the website needs to be the `server` folder.
+- Copy `server/config_default.php` to `server/config.php` and change the settings.
+- Import skylive.sql into MySQL.
 
 #### Export HLS to mp4
 

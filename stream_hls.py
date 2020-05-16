@@ -65,7 +65,6 @@ def upload(saveTo, fileId, length, filearr):
 		filearr[fileId].status = 6
 
 	siaskylink = skylink.replace("sia://", "")
-	siaskylink = 'https://siasky.net/' + siaskylink
 	filearr[fileId].skylink = siaskylink
 	if filearr[fileId].status != 6:
 		filearr[fileId].status = 3
@@ -141,12 +140,13 @@ def updateDisplay(window, filearr, symbols):
 	window.refresh()
 
 def share(fileId, filearr):
+	global m3u8_list_upload_token, is_first_chunk
 	filearr[fileId].status = 4
 	post = {
-		'password': config.m3u8_list_upload_password,
-		'streamid': streamId,
+		'token': m3u8_list_upload_token,
 		'url': filearr[fileId].skylink,
-		'length': filearr[fileId].length
+		'length': filearr[fileId].length,
+		'is_first_chunk': is_first_chunk
 		}
 	x = requests.post(config.m3u8_list_upload_path, data = post)
 	if (x.text != 'ok'):
@@ -154,6 +154,7 @@ def share(fileId, filearr):
 		filearr[fileId].status = 6
 	else:
 		filearr[fileId].status = 5
+		is_first_chunk = 0
 
 def worker(window):
 	global concurrent_uploads, projectPath, recordFolder
@@ -226,9 +227,7 @@ def worker(window):
 			share(nextToShare, filearr)
 			lastSharedFileId += 1
 
-if config.m3u8_list_upload_password == '':
-	print('Playlist server password did not set, please setup config.py (more info in readme.md)')
-	exit(0)
+
 
 parser = argparse.ArgumentParser('Upload HLS (m3u8) live stream to SkyLive')
 parser.add_argument('--record_folder', help='Record folder, where m3u8 and ts files are (will be) located (default: record_here)')
@@ -236,6 +235,7 @@ args = parser.parse_args()
 
 concurrent_uploads = 0
 projectPath = os.path.dirname(os.path.abspath(__file__))
+is_first_chunk = 1
 
 # get recordFolder
 if (args.record_folder):
@@ -248,11 +248,12 @@ else:
 
 if not folderIsEmpty(recordFolder):
 	print('Record folder is not empty: ' + recordFolder)
-	print('Are you sure, you want to continue?')
-	input("Press Enter to continue...")
+	input('Are you sure, you want to continue? Press Enter to continue...')
 
-streamId = input("Enter stream id: ")
-
+while True:
+	m3u8_list_upload_token = input("Enter stream token: ")
+	if (m3u8_list_upload_token):
+		break
 	
 logFile = os.path.join(projectPath, "error_log.txt")
 logging.basicConfig(filename=logFile,
