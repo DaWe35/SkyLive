@@ -24,5 +24,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	if (file_exists('post/'.PAGE.'.php')) { include 'post/'.PAGE.'.php'; } //INCLUDE CONTROLLER
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 	if (file_exists('get/'.PAGE.'.php')) { include 'get/'.PAGE.'.php'; } //INCLUDE CONTROLLER
-	include 'model/display.php';
 }

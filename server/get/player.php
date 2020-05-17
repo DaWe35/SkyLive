@@ -5,3 +5,5 @@ if (isset($_GET['portal']) && !empty($_GET['portal'])) {
 } else {
     $portal = '';
 }
+
+include 'model/display.php';

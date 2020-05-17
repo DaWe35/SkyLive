@@ -76,6 +76,3 @@ if ($rowcount === 0) {
 }
 
 $stmt = null;
-
-
-exit(); // Don't include model.display.php

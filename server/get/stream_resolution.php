@@ -65,6 +65,3 @@ $stmt = null;
 if ($stream['finished'] == 1) {
     echo "#EXT-X-ENDLIST\n";
 }
-
-
-exit(); // Don't include model.display.php

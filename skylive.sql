@@ -49,7 +49,7 @@ CREATE TABLE `users` (
   `reg_time` int(10) UNSIGNED NOT NULL,
   `rank` enum('unverified','user','admin') DEFAULT 'unverified',
   `badlogin` tinyint(4) DEFAULT '0',
-  `loginban` tinyint(1) DEFAULT '0'
+  `loginban` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

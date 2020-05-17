@@ -4,3 +4,5 @@ $streams_stmt = $db->prepare("SELECT `streamid`, `title`, `description`, `scheul
 if (!$streams_stmt->execute()) {
     exit('Database error');
 }
+
+include 'model/display.php';
