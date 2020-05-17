@@ -1,7 +1,6 @@
 <?php
 require_once "config.php";
 require_once "model/explode_url.php";
-require_once "model/session.php";
 require_once "model/image_print.php";
 
 exploge_geturl($_GET['geturl']);
