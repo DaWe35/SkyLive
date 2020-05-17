@@ -10,7 +10,7 @@ if (!isset($displayPage)) {
         <title><?= isset($pagetitle) ? $pagetitle : 'SkyLive' ?></title>
         <?php include "view/include_studio/head.php"; ?>
     </head>
-    <body class="w3-black">
+    <body>
         <div class="wrap">
             <?php include "view/include_studio/nav.php";
             if (file_exists('view/studio/'.$displayPage.'.php')) {
@@ -21,6 +21,5 @@ if (!isset($displayPage)) {
             }
             ?>
         </div>
-        <?php include "view/include_studio/footer.php"; ?>
     </body>
 </html>

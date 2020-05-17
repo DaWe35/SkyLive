@@ -1,0 +1,87 @@
+:root {
+    --grey1: #202225;
+    --grey2: #2F3136;
+    --grey3: #36393F;
+    --grey4: #40444B;
+  }
+  
+
+body {
+    background-color: var(--grey2);
+}
+.grey2 {
+    background-color: var(--grey2);
+}
+.grey1 {
+    background-color: var(--grey1);
+}
+
+.float-right {
+    float: right;
+}
+input {
+    background-color: var(--grey4);
+    color: #FFF;
+    border: none !important;
+    padding: 16px !important;
+    border-radius: 10px;
+}
+.video-row img, .video-row-img-height {
+    height: 150px;
+}
+
+nav a:hover {
+    background-color: var(--grey2);
+    color: #fff;
+    text-decoration: none;
+}
+nav a p {
+    margin-bottom: 0px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+.div-table {
+    display: table;
+    width: auto;
+    border-spacing: 5px; /* cellspacing:poor IE support for  this */
+}
+.video-row {
+    display: table-row;
+    width: auto;
+    clear: both;
+}
+.video-col {
+    float: left; /* fix for  buggy browsers */
+    display: table-column;
+}
+
+.video-col h4 {
+    margin-left: 10px;
+    margin-top: 0px;
+}
+.video-col p {
+    margin-left: 10px;
+    color: grey;
+}
+
+.w3-row-padding img {
+    margin-bottom: 12px
+}
+
+/* Set the width of the sidebar to 120px */
+.w3-sidebar {
+    width: 120px;
+    background: var(--grey1);
+}
+/* Add a left margin to the "page content" that matches the width of the sidebar (120px) */
+#main {
+    margin-left: 120px
+}
+/* Remove margins from "page content" on small screens */
+@media only screen and (max-width: 600px) {
+    #main {
+        margin-left: 0
+    }
+}
