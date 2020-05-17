@@ -7,7 +7,7 @@ if (!isset($_SESSION['id']) || empty($_SESSION['id'])) {
 }
 
 if (SUBPAGE == '') {
-    include 'studio/index.php';
+    include 'get/studio/index.php';
 } else {
-    include 'studio/' . SUBPAGE . '.php';
+    include 'get/studio/' . SUBPAGE . '.php';
 }

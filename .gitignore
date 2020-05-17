@@ -10,3 +10,7 @@
 /record_here_obws
 /record_here_long
 /server/streams/*.txt
+/server/thumbnails
+/server/example_videos
+/del.py
+/server/get/old_srteam
