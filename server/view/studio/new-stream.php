@@ -1,5 +1,3 @@
-
-
 <!-- Page Content -->
 <div class="w3-padding-large" id="main">
 
@@ -7,14 +5,25 @@
 	<div class="w3-padding-64 w3-content w3-text-grey" id="contact">
 		<p class="text-center">Upload live event details, generate stream token:</p>
 
-		<form action="/action_page.php" target="_blank">
-			<p><input class="w3-input" type="text" placeholder="Title" required name="title"></p>
-			<p><input class="w3-input" type="text" placeholder="Description" required name="description"></p>
-			<p><input class="w3-input" type="text" placeholder="Start time" required name="scheule_time"></p>
-			<p><input class="w3-input" type="text" placeholder="Visibility" required name="visibility"></p>
+		<form method="POST" target="_blank" class="new-stream-form">
+			<p><input class="w3-input" type="text" placeholder="Title" name="title" required></p>
+			<p><textarea class="w3-input" type="text" placeholder="Description" name="description" required></textarea></p>
+			<p>Thumbnail: <input class="w3-input" type="file" placeholder="Thumbnail" name="thumbnail" required></p>
+			<p>Start time: 
+				<input class="w3-input" type="datetime-local" id="scheule_time_local" onchange="change_timestamp()" required>
+				<input type="hidden" id="scheule_time" name="scheule_time" required>
+			</p>
+
+			<p>
+				Visibility:
+				<input type="radio" id="public" name="visibility" value="public" required>
+				<label for="public">Public</label>
+				<input type="radio" id="non-listed" name="visibility" value="non-listed">
+				<label for="non-listed">Non-listed</label>
+			</p>
 			<p class="text-center">
-				<button class="w3-button w3-padding-large" type="submit">
-					<i class="fa fa-save"></i> SAVE DETAILS
+				<button class="btn btn-outline-light btn-lg" type="submit">
+					<i class="fa fa-save"></i> Save details
 				</button>
 			</p>
 		</form>
@@ -23,3 +32,16 @@
 
 <!-- END PAGE CONTENT -->
 </div>
+
+<script>
+	var now = new Date();
+	now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+	document.getElementById('scheule_time_local').value = now.toISOString().slice(0,16);
+	change_timestamp()
+
+	function change_timestamp() {
+		let scheule_time_local = Date.parse(document.getElementById('scheule_time_local').value) / 1000;
+		let scheule_time = scheule_time_local;
+		document.getElementById('scheule_time').value = scheule_time;
+	}
+</script>
