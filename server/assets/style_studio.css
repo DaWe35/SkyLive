@@ -88,6 +88,13 @@ nav a p {
     color: grey;
 }
 
+.video-col p span {
+    color: var(--grey4);
+    overflow: hidden;
+    max-width: 100px;
+    display: inline-grid;
+}
+
 .w3-row-padding img {
     margin-bottom: 12px
 }

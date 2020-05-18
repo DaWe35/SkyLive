@@ -23,6 +23,10 @@
 				<div class="video-col">
 					<h4><?= $row['title'] ?></h4>
 					<p><?= $row['description'] ?></p>
+					<p>Token: 
+						<span class="streams-token"><?= $row['token'] ?></span><span>...</span>
+						<button class="btn btn-sm" onclick="copy('<?= $row['token'] ?>')">Copy</button>
+					</p>
 				</div>
 				
 			</div> <?php
@@ -37,3 +41,15 @@
 
 <!-- END PAGE CONTENT -->
 </div>
+
+<script>
+function copy(text) {
+    var input = document.createElement('input');
+    input.setAttribute('value', text);
+    document.body.appendChild(input);
+    input.select();
+    var result = document.execCommand('copy');
+    document.body.removeChild(input);
+    return result;
+}
+</script>
