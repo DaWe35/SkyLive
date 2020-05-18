@@ -72,9 +72,13 @@ ALTER TABLE `chunks`
 ALTER TABLE `stream`
   MODIFY `streamid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
-ALTER TABLE `newsletter` CHANGE `subscribtion_time` `subscribtion_time` INT(11) UNSIGNED NULL DEFAULT NULL; 
+ALTER TABLE `newsletter` CHANGE `subscribtion_time` `subscribtion_time` INT(11) UNSIGNED NULL DEFAULT NULL;
 
-ALTER TABLE `newsletter` CHANGE `ip` `ip` INT(11) UNSIGNED NULL DEFAULT NULL; 
+ALTER TABLE `newsletter` CHANGE `ip` `ip` INT(11) UNSIGNED NULL DEFAULT NULL;
+
+ALTER TABLE `stream` CHANGE `token` `token` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL;
+ALTER TABLE `stream` CHANGE `title` `title` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_bin NULL DEFAULT NULL;
+ALTER TABLE `stream` CHANGE `started` `started` TINYINT(1) NOT NULL DEFAULT '0', CHANGE `finished` `finished` TINYINT(1) NOT NULL DEFAULT '0';
 
 COMMIT;
 
