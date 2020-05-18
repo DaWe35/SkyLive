@@ -66,29 +66,27 @@ nav a p {
 }
 .div-table {
     display: table;
-    width: auto;
-    border-spacing: 5px; /* cellspacing:poor IE support for  this */
+	width: 100%;
 }
 .video-row {
     display: table-row;
-    width: auto;
-    clear: both;
 }
-.video-col {
-    float: left; /* fix for  buggy browsers */
-    display: table-column;
+.video-cell {
+    display: table-cell;
+    border-collapse: collapse;
+    vertical-align: top;
 }
 
-.video-col h4 {
+.video-cell h4 {
     margin-left: 10px;
     margin-top: 0px;
 }
-.video-col p {
+.video-cell p {
     margin-left: 10px;
     color: grey;
 }
 
-.video-col p span {
+.video-cell p span {
     color: var(--grey4);
     overflow: hidden;
     max-width: 100px;

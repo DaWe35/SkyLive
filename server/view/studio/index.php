@@ -8,7 +8,7 @@
 		<!-- <p>Photographer and Web Designer.</p> -->
 	</header>
 	
-	<!-- Portfolio Section -->
+	<!-- Section -->
 	<div class="w3-content text-white" id="photos">
 		<a type="button" class="btn btn-outline-light btn-lg float-right" href="/studio/new-stream">+ Create new stream</a>
 		<h2 class="text-muted">My streams</h2>
@@ -16,27 +16,30 @@
 
 
 		<!-- Grid for photos -->
-		<div class="w3-row-padding div-table" style="margin:0 -16px"> <?php
-		while ($row = $stmt_streams->fetch(PDO::FETCH_ASSOC)) { ?>
-			<div class="video-row">
-				<img class="video-col" src="<?= image_print($row['streamid'], 600) ?>" alt="" />
-				<div class="video-col">
-					<h4><?= $row['title'] ?></h4>
-					<p><?= $row['description'] ?></p>
-					<p>Token: 
-						<span class="streams-token"><?= $row['token'] ?></span><span>...</span>
-						<button class="btn btn-sm" onclick="copy('<?= $row['token'] ?>')">Copy</button>
-					</p>
-				</div>
-				
-			</div> <?php
-		}
-		$stmt_streams = null; ?>
-			
-		<!-- End photo grid -->
+		<div class="w3-row-padding div-table" style="margin:0 -16px">
+			<div class="video-body"><?php
+				while ($row = $stmt_streams->fetch(PDO::FETCH_ASSOC)) { ?>
+					<div class="video-row">
+						<div class="video-cell">
+							<img class="" src="<?= image_print($row['streamid'], 600) ?>" alt="" />
+						</div>
+						<div class="video-cell">
+							<h4><?= $row['title'] ?></h4>
+							<p><?= $row['description'] ?></p>
+							<p>Token: 
+								<span class="streams-token"><?= $row['token'] ?></span><span>...</span>
+								<button class="btn btn-sm" onclick="copy('<?= $row['token'] ?>')">Copy</button>
+							</p>
+						</div>
+						
+					</div> <?php
+				}
+				$stmt_streams = null; ?>
+			</div>
+		<!-- End table -->
 		</div>
 		
-	<!-- End Portfolio Section -->
+	<!-- End Section -->
 	</div>
 
 <!-- END PAGE CONTENT -->

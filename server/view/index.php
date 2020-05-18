@@ -50,7 +50,9 @@ $player = URL . 'player?s=';
 						<a href="<?= $player . $row['streamid']?>">
 							<h4 class="card-title"><?= $row['title'] ?></h4>
 						</a>
-						<?= $row['description'] ?>
+						<div class="card-text">
+							<?= $row['description'] ?>
+						</div>
 					</div>
 				</div>
 			</div> <?php
