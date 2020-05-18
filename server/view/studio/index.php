@@ -19,7 +19,7 @@
 		<div class="w3-row-padding div-table" style="margin:0 -16px"> <?php
 		while ($row = $stmt_streams->fetch(PDO::FETCH_ASSOC)) { ?>
 			<div class="video-row">
-				<img class="video-col" src="<?= image_print($row['streamid']) ?>" alt="" />
+				<img class="video-col" src="<?= image_print($row['streamid'], 600) ?>" alt="" />
 				<div class="video-col">
 					<h4><?= $row['title'] ?></h4>
 					<p><?= $row['description'] ?></p>

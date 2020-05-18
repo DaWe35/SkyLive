@@ -12,7 +12,6 @@ function random_str(int $length = 128, string $keyspace = '0123456789abcdefghijk
     return implode('', $pieces);
 }
 
-
 $token = random_str();
 
 $stmt = $db->prepare("INSERT INTO `stream`(`token`, `userid`, `title`, `description`, `scheule_time`, `visibility`) VALUES (?, ?, ?, ?, ?,  ?)");
@@ -22,4 +21,6 @@ if (!$stmt->execute([$token, $_SESSION['id'], $_POST['title'], $_POST['descripti
     exit('Database error');
 }
 
+require('model/image_resize.php');
+save_image($db->lastInsertId(), $upload_folder);
 header('Location: /studio');

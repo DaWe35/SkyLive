@@ -5,10 +5,10 @@
 	<div class="w3-padding-64 w3-content w3-text-grey" id="contact">
 		<p class="text-center">Upload live event details, generate stream token:</p>
 
-		<form method="POST" target="_blank" class="new-stream-form">
+		<form method="POST" class="new-stream-form" enctype="multipart/form-data">
 			<p><input class="w3-input" type="text" placeholder="Title" name="title" required></p>
 			<p><textarea class="w3-input" type="text" placeholder="Description" name="description" required></textarea></p>
-			<p>Thumbnail: <input class="w3-input" type="file" placeholder="Thumbnail" name="thumbnail" required></p>
+			<p>Thumbnail: <input class="w3-input" type="file" placeholder="Thumbnail" name="file" required></p>
 			<p>Start time: 
 				<input class="w3-input" type="datetime-local" id="scheule_time_local" onchange="change_timestamp()" required>
 				<input type="hidden" id="scheule_time" name="scheule_time" required>
