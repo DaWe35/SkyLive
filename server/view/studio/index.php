@@ -10,7 +10,7 @@
 	
 	<!-- Section -->
 	<div class="w3-content text-white" id="photos">
-		<a type="button" class="btn btn-outline-light btn-lg float-right" href="/studio/new-stream">+ Create new stream</a>
+		<a type="button" class="btn btn-grey4 btn-outline-light btn-lg float-right" href="/studio/new-stream">+ Create new stream</a>
 		<h2 class="text-muted">My streams</h2>
 		<br>
 
@@ -28,7 +28,10 @@
 							<p><?= $row['description'] ?></p>
 							<p>Token: 
 								<span class="streams-token"><?= $row['token'] ?></span><span>...</span>
-								<button class="btn btn-sm" onclick="copy('<?= $row['token'] ?>')">Copy</button>
+								<button class="btn btn-grey4 btn-sm" onclick="copy('<?= $row['token'] ?>')">Copy</button> <?php
+								if ($row['started'] == 1 && $row['finished'] == 0) { ?>
+									<button class="btn btn-danger btn-sm" onclick="finish_stream('<?= $row['streamid'] ?>', this)">Finish</button> <?php
+								} ?>
 							</p>
 						</div>
 						
@@ -47,12 +50,34 @@
 
 <script>
 function copy(text) {
-    var input = document.createElement('input');
+    let input = document.createElement('input');
     input.setAttribute('value', text);
     document.body.appendChild(input);
     input.select();
-    var result = document.execCommand('copy');
+    let result = document.execCommand('copy');
     document.body.removeChild(input);
     return result;
+}
+
+function finish_stream(streamid, elem) {
+	elem.disabled = true;
+	var request = $.ajax({
+		url: "/studio/finish_stream",
+		type: "POST",
+		data: {streamid: streamid},
+		dataType: "html"
+	});
+
+	request.done(function(msg) {
+		if (msg == 'ok') {
+			elem.remove();
+		} else {
+			alert( "Request failed: " + msg );
+		}
+	});
+
+	request.fail(function(jqXHR, textStatus) {
+		alert( "Request failed: " + textStatus );
+	});
 }
 </script>

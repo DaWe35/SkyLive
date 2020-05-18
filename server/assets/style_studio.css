@@ -38,7 +38,7 @@ input[type="radio"]+label {
     cursor: pointer;
     background-color: var(--grey2);
 }
-input[type="radio"]:checked+label, button, .btn {
+input[type="radio"]:checked+label, button, .btn-grey4 {
     background-color: var(--grey4);
 }
 input[type="radio"]+label {

@@ -22,7 +22,7 @@
 				<label for="non-listed">Non-listed</label>
 			</p>
 			<p class="text-center">
-				<button class="btn btn-outline-light btn-lg" type="submit">
+				<button class="btn btn-grey4 btn-outline-light btn-lg" type="submit">
 					<i class="fa fa-save"></i> Save details
 				</button>
 			</p>
