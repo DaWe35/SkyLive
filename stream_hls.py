@@ -50,24 +50,23 @@ def upload_file(saveTo, portal):
 
 def upload(saveTo, fileId, length, filearr):
 	global concurrent_uploads
-	filearr[fileId].status = 2
+	filearr[fileId].status = 'uploading'
 	start_time = time.time()
 
 	# upload and retry if fails with backup portals
-	skylink = upload_file(saveTo, config.upload_portal_url)
-	for backup_portal in config.backup_portals:
+	for upload_portal in config.upload_portals:
+		skylink = upload_file(saveTo, upload_portal)
 		if skylink != False:
 			break
-		skylink = upload_file(saveTo, backup_portal)
 
 	if (skylink == False):
 		logging.error('Upload finally failed for', saveTo)
-		filearr[fileId].status = 6
+		filearr[fileId].status = 'share failed'
 
 	siaskylink = skylink.replace("sia://", "")
 	filearr[fileId].skylink = siaskylink
-	if filearr[fileId].status != 6:
-		filearr[fileId].status = 3
+	if filearr[fileId].status != 'share failed':
+		filearr[fileId].status = 'share queued'
 	filearr[fileId].uploadTime = round(time.time() - start_time)
 	concurrent_uploads -= 1
 
@@ -91,6 +90,12 @@ def chech_m3u8(recordFolder):
 			return True
 	return False
 
+def chech_ts(recordFolder):
+	for file in os.listdir(recordFolder):
+		if file.endswith(".ts"):
+			return True
+	return False
+
 def isPlaylistFinished(recordFolder):
 	playlistFile = os.path.join(recordFolder, "live.m3u8")
 	with open(playlistFile, 'r') as f:
@@ -106,10 +111,10 @@ def updateDisplay(window, filearr, symbols):
 	symbarray = []
 	idx = 0
 	
-	for symb in symbols:
-		symbarray.append([symb.symbol, symb.description, idx])
+	for key, value in symbols.items():
+		symbarray.append([value, key])
 		idx += 1
-	table = (tabulate(symbarray, headers=['symbol', 'status', 'code'], tablefmt='orgtbl'))
+	table = (tabulate(symbarray, headers=['symbol', 'status'], tablefmt='orgtbl'))
 	window.addstr(table + '\n\n\n')
 
 	file = ['File']
@@ -123,7 +128,7 @@ def updateDisplay(window, filearr, symbols):
 		ind = -ran+i
 		symbolCode = filearr[ind].status
 		file.append(filearr[ind].fileId)
-		status.append(symbols[symbolCode].symbol)
+		status.append(symbols[symbolCode])
 		videoLength = round(filearr[ind].length)
 		if (videoLength == -1):
 			length.append('')
@@ -141,55 +146,87 @@ def updateDisplay(window, filearr, symbols):
 
 def share(fileId, filearr):
 	global m3u8_list_upload_token, is_first_chunk
-	filearr[fileId].status = 4
+	filearr[fileId].status = 'sharing'
 	post = {
 		'token': m3u8_list_upload_token,
 		'url': filearr[fileId].skylink,
 		'length': filearr[fileId].length,
 		'is_first_chunk': is_first_chunk
 		}
-	x = requests.post(config.m3u8_list_upload_path, data = post)
-	if (x.text != 'ok'):
-		logging.error('Error: posting failed', x.text)
-		filearr[fileId].status = 6
-	else:
-		filearr[fileId].status = 5
-		is_first_chunk = 0
+	try:
+		x = requests.post(config.m3u8_list_upload_path, data = post)
+		if (x.text != 'ok'):
+			logging.error('Error: posting failed', x.text)
+			filearr[fileId].status = 'share failed'
+			return False
+		else:
+			filearr[fileId].status = 'shared'
+			is_first_chunk = 0
+			return True
+	except Exception as e:
+		logging.error('Error: posting failed', e)
+		filearr[fileId].status = 'share failed'
+		return False
+
+
+def share_thread():
+	global filearr
+	lastSharedFileId = -1
+	# check_share_queue(check_share_queue, filearr)
+	while True:
+		nextToShare = lastSharedFileId + 1
+		if filearr[nextToShare].status == 'share queued' or filearr[nextToShare].status == 'share failed':
+			if share(nextToShare, filearr) == True:
+				lastSharedFileId += 1
+			else:
+				time.sleep(10)
+		time.sleep(1)
+
+
+class VideoFile:
+	def __init__(self, fileId):
+		self.fileId = fileId
+		self.status = 'waiting for file'
+		self.uploadTime = -1
+		self.length = -1
+		self.skylink = 'skylink'
+	def __str__(self):
+		return str(self.__dict__)
+
+nextStreamFilename = 0
+filearr = [
+	# file, status, upload time, length, skylink
+	VideoFile(nextStreamFilename)
+]
 
 def worker(window):
-	global concurrent_uploads, projectPath, recordFolder
+	global concurrent_uploads, projectPath, recordFolder, filearr, nextStreamFilename
+
 	streamedTime = 0
-	nextStreamFilename = 0
-	lastSharedFileId = -1
-	class VideoFile:
-		def __init__(self, fileId):
-			self.fileId = fileId
-			self.status = 0
-			self.uploadTime = -1
-			self.length = -1
-			self.skylink = 'skylink'
-		def __str__(self):
-			return str(self.__dict__)
 
-	filearr = [
-		# file, status, upload time, length, skylink
-		VideoFile(nextStreamFilename)
+
+	""" 	symbols = [
+		0 Symbol(" ", 'waiting for file'),
+		1 Symbol(".", 'upload queued'),
+		2 Symbol("↑", 'uploading'),
+		3 Symbol("▒", 'share queued'),
+		4 Symbol("▓", 'sharing'),
+		5 Symbol("█", 'shared'),
+		6 Symbol("X", 'share failed'),
 	]
-
-	class Symbol:
-		def __init__(self, symbol, description):
-			self.symbol = symbol
-			self.description = description
-
-	symbols = [
-		Symbol(" ", 'waiting for file'),
-		Symbol(".", 'upload queued'),
-		Symbol("↑", 'uploading'),
-		Symbol("▒", 'share queued'),
-		Symbol("▓", 'sharing'),
-		Symbol("█", 'shared'),
-		Symbol("X", 'share failed'),
-	]
+	"""
+	symbols = {
+		'waiting for file':				' ',
+		'upload queued':				'.',
+		'uploading':					'↑',
+		'uploading with backup portal':	'↟',
+		'queued for re-uploading':		'↺',
+		're-uploading':					'⇈',
+		'share queued':					'▒',
+		'sharing':						'▓',
+		'shared':						'█',
+		'share failed':					'x'
+	}
 	touchDir(recordFolder)
 
 	cntr = 0
@@ -199,20 +236,25 @@ def worker(window):
 				record_folder_name = args.record_folder
 			else:
 				record_folder_name = 'record_here'
-			window.addstr(0, 0, 'Waiting for recording, no m3u8 file found in ' + record_folder_name + ' folder (%ds)' %(cntr))
+			if not (chech_ts(recordFolder)):
+				window.addstr(0, 0, 'Waiting for recording, no .m3u8 or .ts file found in ' + record_folder_name + ' folder (%ds)' %(cntr))
+			else:
+				window.addstr(0, 0, 'Starting uploading... Waiting for first chunk and for .m3u8 file in ' + record_folder_name + ' folder (%ds)' %(cntr))
 			window.refresh()
 			cntr += 1
 			time.sleep(1)
 		else:
 			break
 
+
+	Thread(target=share_thread).start()
 	while True:
 		nextFile = os.path.join(recordFolder, "live" + str(nextStreamFilename) + ".ts")
 		nextAfterFile = os.path.join(recordFolder, "live" + str(nextStreamFilename + 1) + ".ts")
 		updateDisplay(window, filearr, symbols)
 		if concurrent_uploads < 10 and ( os.path.isfile(nextAfterFile) or ( isPlaylistFinished(recordFolder) and os.path.isfile(nextFile) ) ):
 			filearr.append(VideoFile(nextStreamFilename + 1))
-			filearr[nextStreamFilename].status = 1
+			filearr[nextStreamFilename].status = 'upload queued'
 			nextLen = get_length(nextFile)
 			filearr[nextStreamFilename].length = nextLen
 			Thread(target=upload, args=(nextFile, nextStreamFilename, nextLen, filearr)).start()
@@ -220,12 +262,7 @@ def worker(window):
 			nextStreamFilename += 1
 		else:
 			time.sleep(1)
-		
-		# check_share_queue(check_share_queue, filearr)
-		nextToShare = lastSharedFileId + 1
-		if (filearr[nextToShare].status == 3):
-			share(nextToShare, filearr)
-			lastSharedFileId += 1
+	
 
 
 
