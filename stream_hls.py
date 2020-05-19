@@ -34,7 +34,7 @@ def rmdir(dir):
 	if os.path.isdir(dir):
 		shutil.rmtree(dir)
 
-def upload_file(saveTo, portal):
+def upload_file(filePath, portal):
 	opts = type('obj', (object,), {
 		'portal_url': portal,
 		'portal_upload_path': 'skynet/skyfile',
@@ -43,32 +43,42 @@ def upload_file(saveTo, portal):
 		'custom_filename': ''
 	})
 	try:
-		return Skynet.upload_file(saveTo, opts)
+		return Skynet.upload_file(filePath, opts)
 	except:
 		logging.error('Uploading failed with ', portal)
 		return False
 
-def upload(saveTo, fileId, length, filearr):
-	global concurrent_uploads
-	filearr[fileId].status = 'uploading'
-	start_time = time.time()
+def upload(filePath, fileId, length, reupload=False):
+	global concurrent_uploads, filearr
+
+	if reupload == False:
+		concurrent_uploads += 1
+		filearr[fileId].status = 'uploading'
+		start_time = time.time()
+	else:
+		filearr[fileId].status = 're-uploading'
+		start_time = reupload
 
 	# upload and retry if fails with backup portals
 	for upload_portal in config.upload_portals:
-		skylink = upload_file(saveTo, upload_portal)
+		skylink = upload_file(filePath, upload_portal)
 		if skylink != False:
 			break
+		else:
+			filearr[fileId].status = 'uploading with backup portal'
 
-	if (skylink == False):
-		logging.error('Upload finally failed for', saveTo)
-		filearr[fileId].status = 'share failed'
-
-	siaskylink = skylink.replace("sia://", "")
-	filearr[fileId].skylink = siaskylink
-	if filearr[fileId].status != 'share failed':
-		filearr[fileId].status = 'share queued'
-	filearr[fileId].uploadTime = round(time.time() - start_time)
-	concurrent_uploads -= 1
+	if (skylink != False and len(skylink) == 52):
+		skylink = skylink.replace("sia://", "")
+		filearr[fileId].skylink = skylink
+		if filearr[fileId].status != 'share failed':
+			filearr[fileId].status = 'share queued'
+		filearr[fileId].uploadTime = round(time.time() - start_time)
+		concurrent_uploads -= 1
+	else:
+		logging.error('Upload finally failed for', str(filePath))
+		filearr[fileId].status = 'queued for re-uploading'
+		time.sleep(10)
+		upload(filePath, fileId, length, start_time)
 
 
 def get_length(filename):
@@ -107,7 +117,7 @@ def isPlaylistFinished(recordFolder):
 			return False
 
 def updateDisplay(window, filearr, symbols):
-	window.addstr(0, 0, 'Status symbols:\n')
+	window.addstr(0, 0, 'Ā Status symbols:\n')
 	symbarray = []
 	idx = 0
 	
@@ -180,7 +190,7 @@ def share_thread():
 				lastSharedFileId += 1
 			else:
 				time.sleep(10)
-		time.sleep(1)
+		time.sleep(0.2)
 
 
 class VideoFile:
@@ -204,24 +214,13 @@ def worker(window):
 
 	streamedTime = 0
 
-
-	""" 	symbols = [
-		0 Symbol(" ", 'waiting for file'),
-		1 Symbol(".", 'upload queued'),
-		2 Symbol("↑", 'uploading'),
-		3 Symbol("▒", 'share queued'),
-		4 Symbol("▓", 'sharing'),
-		5 Symbol("█", 'shared'),
-		6 Symbol("X", 'share failed'),
-	]
-	"""
 	symbols = {
 		'waiting for file':				' ',
 		'upload queued':				'.',
 		'uploading':					'↑',
-		'uploading with backup portal':	'↟',
-		'queued for re-uploading':		'↺',
-		're-uploading':					'⇈',
+		'uploading with backup portal':	'↕',
+		'queued for re-uploading':		'↔',
+		're-uploading':					'↨',
 		'share queued':					'▒',
 		'sharing':						'▓',
 		'shared':						'█',
@@ -257,8 +256,7 @@ def worker(window):
 			filearr[nextStreamFilename].status = 'upload queued'
 			nextLen = get_length(nextFile)
 			filearr[nextStreamFilename].length = nextLen
-			Thread(target=upload, args=(nextFile, nextStreamFilename, nextLen, filearr)).start()
-			concurrent_uploads += 1
+			Thread(target=upload, args=(nextFile, nextStreamFilename, nextLen)).start()
 			nextStreamFilename += 1
 		else:
 			time.sleep(1)
