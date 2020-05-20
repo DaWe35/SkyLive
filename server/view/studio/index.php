@@ -21,10 +21,14 @@
 				while ($row = $stmt_streams->fetch(PDO::FETCH_ASSOC)) { ?>
 					<div class="video-row">
 						<div class="video-cell">
-							<img class="" src="<?= image_print($row['streamid'], 600) ?>" alt="" />
+							<a href="/player?s=<?= $row['streamid'] ?>">
+								<img class="" src="<?= image_print($row['streamid'], 600) ?>" alt="" />
+							</a>
 						</div>
 						<div class="video-cell">
-							<h4><?= $row['title'] ?></h4>
+							<a href="/player?s=<?= $row['streamid'] ?>">
+								<h4><?= $row['title'] ?></h4>
+							</a>
 							<p><?= $row['description'] ?></p>
 							<p>Token: 
 								<span class="streams-token"><?= $row['token'] ?></span><span>...</span>
