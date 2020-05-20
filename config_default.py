@@ -1,6 +1,8 @@
-upload_portal_url = 'https://siasky.net'
 m3u8_list_upload_path = 'https://your.site/server/write.php'
-backup_portals = [
-    'https://skynethub.io',
+upload_portals = [
     'https://skynet.tutemwesi.com',
+    'https://skyportal.xyz',
+    'https://siasky.net',
+    'https://skynethub.io',
+    'https://siacdn.com',
 ]
