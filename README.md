@@ -4,29 +4,31 @@ Live HLS video streams hosted on Skynet. SkyLive is under heavy development, str
 
 [Check out our roadmap](https://github.com/DaWe35/SkyLive/projects/3)
 
-![How SkyLive works](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/how%20it%20works.jpg)
-
-Demo: https://siasky.net/AAA5tBYYnuMhMl1qRV-bphSTyPsZ9JlAtKkJ21gJhSEu2g/index.html
-
-First live on Skynet: https://siasky.net/EACSRCJLMtS-P6tpGNr1ZMCGFBbWXKoNKTHV_3l81jLE1Q
-
 Explore streams: https://skylive.coolhd.hu
 
-# Setup HSL streamer
+# How to start stream
 
-`stream_hls.py` will upload your `.ts` segment to Skynet, and share the uploaded Skylink with the playlist server (for example https://skylive.coolhd.hu)
+- Download & extract the latest binaries from [releases](https://github.com/DaWe35/SkyLive/releases)
 
-- Install python 3.7+
+- Register a SkyLive account and scheule a new stream.
 
-- `cd Skylive && pip install -r requirements.txt`
+- Open command prompt and start the uploader with this command: `"C:\\path\to\stream_hls.exe" --record_folder "C:\\path\to\record_here"`
 
-- `cp config_default.py config.py` and edit it. Recommended, to benchmark free portals daily `python3 benchmark_portals.py`, and use the better ones for uploading.
+- Enter the generated stream token from https://SkyLive.coolhd.hu/studio
 
-- To start uploading, run `python3 stream_hls.py`. After the script started, you can record HLS video into `record_here` folder. Important: the file name must be `live.m3u8`!
+- Setup OBS (below) and start recording into the 'record_here' folder!
 
-# Record HLS
+# How to finish the stream
 
-### Record m3u8 with OBS:
+- Click Stop recording in OBS
+
+- Wait for every segment uploaded
+
+- Close stream_hls.exe
+
+- Open https://SkyLive.coolhd.hu/studio and `Finish` the stream (after this, it will be seekable)
+
+# Setup OBS:
 
 - Download & config OBS
 
@@ -66,34 +68,32 @@ Explore streams: https://skylive.coolhd.hu
     
       ![OBS filename](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_filename.jpg)
 
-**Start stream & OBS**
-
-- Always start `python stream_hls.py` before starting the recording!
-
-**Stop OBS & stream**
-
-- Stop OBS
-
-- stream_hls.py uploads only the *current chunk - 1*th file. So if your last chunk is `live44.ts`, only `live43.ts` has been uploaded. You need to create an empty file `live45.ts`, if you want to upload the 44th chunk.
-
-- After each chunk was uploaded, close `stream_hls.py`
-
-- If you want to make the whole playlist replayable, you need to insert `#EXT-X-ENDLIST` to the end of the playlist. Open the `streams` folder on your webserver, and paste it to the current stream file (filename depends on configured *streamid*).
-
-### Restream m3u8 from Youtube/Twitch
+# Restream m3u8 from Youtube/Twitch
 
 You can restream any public Youtube/Twitch stream to SkyLive without any transcoding or screen recording. The `stream_downloader.py` will download live stream on-demand, so you can re-upload it to SkyLive with `stream_hls.py`.
 
-Usage: `python3 stream_downloader.py --url=https://www.youtube.com/watch?v=kG5araSvvLI`
+Usage: 
 
-# Setup playlist server
+`cd C:\\path\to\SkyLive`
 
-- Running a you-own SkyLive portal needs PHP and MySQL. On Windows, I recommend wamp.net. The root directory of the website needs to be the `server` folder.
-- Copy `server/config_default.php` to `server/config.php` and change the settings.
-- Import skylive.sql into MySQL.
+Start downloader:
 
-#### Export HLS to mp4
+`stream_downloader.exe --url https://www.youtube.com/watch?v=kG5araSvvLI`
+
+Start uploader:
+
+`"C:\\path\to\stream_hls.exe" --record_folder "C:\\path\to\team_restream_0"`
+
+# Other tricks, notes
+
+### Export HLS to mp4
 
 After the stream, you can easily convert the .ts chunks into one mp4 file:
 
 `ffmpeg -i "http://host/folder/input.m3u8" -bsf:a aac_adtstoasc -vcodec copy -c copy output.mp4`
+
+### Optional: setup you own playlist server
+
+- Running a you-own SkyLive portal needs PHP and MySQL. On Windows, I recommend wamp.net. The root directory of the website needs to be the `server` folder.
+- Copy `server/config_default.php` to `server/config.php` and change the settings.
+- Import skylive.sql into MySQL.
