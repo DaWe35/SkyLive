@@ -12,7 +12,6 @@ f.close()
 
 portals = [
     'https://skynet.luxor.tech',
-    'https://siacdn.com',
     'https://vault.lightspeedhosting.com',
     'https://skydrain.net',
     'https://skynethub.io',
@@ -20,7 +19,8 @@ portals = [
     'https://skynet.utxo.no',
     'https://skynet.tutemwesi.com',
     'https://skyportal.xyz',
-    'skynet.cloudloop.io',
+    'https://skynet.cloudloop.io',
+    'https://siacdn.com',
     '',
     'https://siasky.net',
     'https://siasky.net',
