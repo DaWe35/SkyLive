@@ -1,17 +1,19 @@
-import os
-from siaskynet import Skynet
-import time
-import sys
-import logging
-import shutil
-import config
-import json
-import subprocess
-import requests
-from tabulate import tabulate
-import curses
-from threading import Thread
 import argparse
+import config
+import curses
+import json
+import logging
+import os
+from pymediainfo import MediaInfo
+import requests
+import shutil
+from siaskynet import Skynet
+import subprocess
+import sys
+from tabulate import tabulate
+from threading import Thread
+import time
+
 
 def runBash(command):
 	os.system(command)
