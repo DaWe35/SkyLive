@@ -84,15 +84,10 @@ def upload(filePath, fileId, length, reupload=False):
 def get_length(filename):
 	if not os.path.isfile(filename):
 		return False
-	result = subprocess.run(["ffprobe", "-v", "panic", "-show_entries",
-							 "format=duration", "-of",
-							 "default=noprint_wrappers=1:nokey=1", filename],
-		stdout=subprocess.PIPE,
-		stderr=subprocess.STDOUT)
-	if result.stdout:
-		return float(result.stdout)
-	else:
-		return False
+		
+	media_info = MediaInfo.parse(filename)
+	duration_in_ms = float(media_info.tracks[0].duration)
+	return float(duration_in_ms/1000)
 
 def chech_m3u8(recordFolder):
 	for file in os.listdir(recordFolder):
