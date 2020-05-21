@@ -1,7 +1,6 @@
 import argparse
 import config
 import curses
-import json
 import logging
 import os
 from pymediainfo import MediaInfo
@@ -9,7 +8,6 @@ import requests
 import shutil
 from siaskynet import Skynet
 import subprocess
-import sys
 from tabulate import tabulate
 from threading import Thread
 import time
@@ -213,8 +211,6 @@ filearr = [
 
 def worker(window):
 	global concurrent_uploads, projectPath, recordFolder, filearr, nextStreamFilename
-
-	streamedTime = 0
 
 	symbols = {
 		'waiting for file':				' ',
