@@ -85,7 +85,7 @@ def get_length(filename):
 	fps = cap.get(cv2.CAP_PROP_FPS)      # OpenCV2 version 2 used "CV_CAP_PROP_FPS"
 	frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 	duration = frame_count/fps
-	return duration, frame_count
+	return duration
 
 def chech_m3u8(recordFolder):
 	for file in os.listdir(recordFolder):
