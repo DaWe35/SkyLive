@@ -44,7 +44,7 @@ def upload_file(filePath, portal):
 	try:
 		return Skynet.upload_file(filePath, opts)
 	except:
-		logging.error('Uploading failed with', portal)
+		logging.error('Uploading failed with ' + str(portal))
 		return False
 
 def upload(filePath, fileId, length, reupload=False):
@@ -74,7 +74,7 @@ def upload(filePath, fileId, length, reupload=False):
 		filearr[fileId].uploadTime = round(time.time() - start_time)
 		concurrent_uploads -= 1
 	else:
-		logging.error('Upload finally failed for', str(filePath))
+		logging.error('Upload finally failed for ' + str(filePath))
 		filearr[fileId].status = 'queued for re-uploading'
 		time.sleep(10)
 		upload(filePath, fileId, length, start_time)
@@ -159,7 +159,7 @@ def share(fileId, filearr):
 	try:
 		x = requests.post(config.m3u8_list_upload_path, data = post)
 		if (x.text != 'ok'):
-			logging.error('Error: posting failed', x.text)
+			logging.error('Error: posting failed ' + str(x.text))
 			filearr[fileId].status = 'share failed'
 			return False
 		else:
@@ -167,7 +167,7 @@ def share(fileId, filearr):
 			is_first_chunk = 0
 			return True
 	except Exception as e:
-		logging.error('Error: posting failed', e)
+		logging.error('Error: posting failed ' + str(e))
 		filearr[fileId].status = 'share failed'
 		return False
 
