@@ -110,7 +110,7 @@ def isPlaylistFinished(recordFolder):
 			return False
 
 def updateDisplay(filearr, symbols):
-	print(table + '\n\n\n\n\n\n\n\n\n')
+	print('\n\n\n\n\n\n\n\n\n')
 	print('Status symbols:\n')
 	symbarray = []
 	idx = 0
