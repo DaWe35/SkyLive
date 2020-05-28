@@ -4,7 +4,6 @@ import eventlet
 import logging
 import os
 import cv2
-import random
 import requests
 import shutil
 from siaskynet import Skynet
@@ -64,9 +63,7 @@ def upload(filePath, fileId, length):
 	# upload file until success
 	while True:
 		# upload and retry if fails with backup portals
-		random_portal_list = config.upload_portals.copy()
-		random.shuffle(random_portal_list)
-		for upload_portal in random_portal_list:
+		for upload_portal in config.upload_portals:
 			skylink = skynet_push(filePath, upload_portal)
 			if skylink != False:
 				break
