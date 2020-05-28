@@ -1,6 +1,5 @@
 import argparse
 import config
-import curses
 import logging
 import os
 import cv2
@@ -111,7 +110,7 @@ def isPlaylistFinished(recordFolder):
 			return False
 
 def updateDisplay(window, filearr, symbols):
-	window.addstr(0, 0, 'Ā Status symbols:\n')
+	print('Status symbols:\n')
 	symbarray = []
 	idx = 0
 	
@@ -119,7 +118,7 @@ def updateDisplay(window, filearr, symbols):
 		symbarray.append([value, key])
 		idx += 1
 	table = (tabulate(symbarray, headers=['symbol', 'status'], tablefmt='orgtbl'))
-	window.addstr(table + '\n\n\n')
+	print(table + '\n\n\n')
 
 	file = ['File']
 	status = ['Status']
@@ -145,8 +144,7 @@ def updateDisplay(window, filearr, symbols):
 			uptime.append(str(uploadTime) + 's')
 
 	table = (tabulate([file, status, length, uptime], tablefmt='orgtbl'))
-	window.addstr(table)
-	window.refresh()
+	print(table)
 
 def share(fileId, filearr):
 	global m3u8_list_upload_token, is_first_chunk
@@ -203,7 +201,7 @@ filearr = [
 	VideoFile(nextStreamFilename)
 ]
 
-def worker(window):
+def worker():
 	global concurrent_uploads, projectPath, recordFolder, filearr, nextStreamFilename
 
 	symbols = {
@@ -228,10 +226,9 @@ def worker(window):
 			else:
 				record_folder_name = 'record_here'
 			if not (chech_ts(recordFolder)):
-				window.addstr(0, 0, 'Waiting for recording, no .m3u8 or .ts file found in ' + record_folder_name + ' folder (%ds)' %(cntr))
+				print('Waiting for recording, no .m3u8 or .ts file found in ' + record_folder_name + ' folder (%ds)' %(cntr))
 			else:
-				window.addstr(0, 0, 'Starting uploading... Waiting for first chunk and for .m3u8 file in ' + record_folder_name + ' folder (%ds)' %(cntr))
-			window.refresh()
+				print('Starting uploading... Waiting for first chunk and for .m3u8 file in ' + record_folder_name + ' folder (%ds)' %(cntr))
 			cntr += 1
 			time.sleep(1)
 		else:
@@ -293,4 +290,4 @@ logging.basicConfig(filename=logFile,
 	datefmt='%H:%M:%S',
 	level=logging.DEBUG)
 
-curses.wrapper(worker)
+worker()
