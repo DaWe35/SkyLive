@@ -3,7 +3,7 @@ import config
 import curses
 import logging
 import os
-from pymediainfo import MediaInfo
+from cv2
 import requests
 import shutil
 from siaskynet import Skynet
@@ -82,12 +82,11 @@ def upload(filePath, fileId, length, reupload=False):
 
 
 def get_length(filename):
-	if not os.path.isfile(filename):
-		return False
-		
-	media_info = MediaInfo.parse(filename)
-	duration_in_ms = float(media_info.tracks[0].duration)
-	return float(duration_in_ms/1000)
+	cap = cv2.VideoCapture(filename)
+	fps = cap.get(cv2.CAP_PROP_FPS)      # OpenCV2 version 2 used "CV_CAP_PROP_FPS"
+	frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+	duration = frame_count/fps
+	return duration, frame_count
 
 def chech_m3u8(recordFolder):
 	for file in os.listdir(recordFolder):
