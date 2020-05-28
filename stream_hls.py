@@ -47,37 +47,35 @@ def upload_file(filePath, portal):
 		logging.error('Uploading failed with ' + str(portal))
 		return False
 
-def upload(filePath, fileId, length, reupload=False):
+def upload(filePath, fileId, length):
 	global concurrent_uploads, filearr
+	start_time = time.time()
+	concurrent_uploads += 1
+	filearr[fileId].status = 'uploading'
 
-	if reupload == False:
-		concurrent_uploads += 1
-		filearr[fileId].status = 'uploading'
-		start_time = time.time()
-	else:
-		filearr[fileId].status = 're-uploading'
-		start_time = reupload
+	# upload file until success
+	while True:
+		# upload and retry if fails with backup portals
+		for upload_portal in config.upload_portals:
+			skylink = upload_file(filePath, upload_portal)
+			if skylink != False:
+				break
+			else:
+				filearr[fileId].status = 'uploading with backup portal'
 
-	# upload and retry if fails with backup portals
-	for upload_portal in config.upload_portals:
-		skylink = upload_file(filePath, upload_portal)
-		if skylink != False:
-			break
+		if (skylink != False and len(skylink) == 52):
+			skylink = skylink.replace("sia://", "")
+			filearr[fileId].skylink = skylink
+			if filearr[fileId].status != 'share failed':
+				filearr[fileId].status = 'share queued'
+			filearr[fileId].uploadTime = round(time.time() - start_time)
+			concurrent_uploads -= 1
+			return True
 		else:
-			filearr[fileId].status = 'uploading with backup portal'
-
-	if (skylink != False and len(skylink) == 52):
-		skylink = skylink.replace("sia://", "")
-		filearr[fileId].skylink = skylink
-		if filearr[fileId].status != 'share failed':
-			filearr[fileId].status = 'share queued'
-		filearr[fileId].uploadTime = round(time.time() - start_time)
-		concurrent_uploads -= 1
-	else:
-		logging.error('Upload finally failed for ' + str(filePath))
-		filearr[fileId].status = 'queued for re-uploading'
-		time.sleep(10)
-		upload(filePath, fileId, length, start_time)
+			logging.error('Upload failed with all portals for ' + str(filePath))
+			filearr[fileId].status = 'queued for re-uploading'
+			time.sleep(10)
+			filearr[fileId].status = 're-uploading'
 
 
 def get_length(filename):
