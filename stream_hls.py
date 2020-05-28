@@ -1,5 +1,6 @@
 import argparse
 import config
+import eventlet
 import logging
 import os
 import cv2
@@ -33,7 +34,7 @@ def rmdir(dir):
 	if os.path.isdir(dir):
 		shutil.rmtree(dir)
 
-def upload_file(filePath, portal):
+def skynet_push(filePath, portal):
 	opts = type('obj', (object,), {
 		'portal_url': portal,
 		'portal_upload_path': 'skynet/skyfile',
@@ -42,7 +43,12 @@ def upload_file(filePath, portal):
 		'custom_filename': ''
 	})
 	try:
-		return Skynet.upload_file(filePath, opts)
+		try:
+			with eventlet.Timeout(20):
+				return Skynet.upload_file(filePath, opts)            
+		except eventlet.timeout.Timeout:
+			logging.error('Uploading timeout with ' + str(portal))
+			return False
 	except:
 		logging.error('Uploading failed with ' + str(portal))
 		return False
@@ -57,7 +63,7 @@ def upload(filePath, fileId, length):
 	while True:
 		# upload and retry if fails with backup portals
 		for upload_portal in config.upload_portals:
-			skylink = upload_file(filePath, upload_portal)
+			skylink = skynet_push(filePath, upload_portal)
 			if skylink != False:
 				break
 			else:
@@ -288,5 +294,5 @@ else:
 		if (m3u8_list_upload_token):
 			break
 	
-
+eventlet.monkey_patch()
 worker()
