@@ -3,7 +3,7 @@ import config
 import curses
 import logging
 import os
-from cv2
+import cv2
 import requests
 import shutil
 from siaskynet import Skynet
