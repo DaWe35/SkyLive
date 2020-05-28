@@ -4,6 +4,7 @@ import eventlet
 import logging
 import os
 import cv2
+import random
 import requests
 import shutil
 from siaskynet import Skynet
@@ -35,6 +36,7 @@ def rmdir(dir):
 		shutil.rmtree(dir)
 
 def skynet_push(filePath, portal):
+	logging.debug('Uploading ' + str(filePath) + ' with ' + str(portal))
 	opts = type('obj', (object,), {
 		'portal_url': portal,
 		'portal_upload_path': 'skynet/skyfile',
@@ -44,7 +46,7 @@ def skynet_push(filePath, portal):
 	})
 	try:
 		try:
-			with eventlet.Timeout(20):
+			with eventlet.Timeout(60):
 				return Skynet.upload_file(filePath, opts)            
 		except eventlet.timeout.Timeout:
 			logging.error('Uploading timeout with ' + str(portal))
@@ -62,7 +64,9 @@ def upload(filePath, fileId, length):
 	# upload file until success
 	while True:
 		# upload and retry if fails with backup portals
-		for upload_portal in config.upload_portals:
+		random_portal_list = config.upload_portals.copy()
+		random.shuffle(random_portal_list)
+		for upload_portal in random_portal_list:
 			skylink = skynet_push(filePath, upload_portal)
 			if skylink != False:
 				break
@@ -265,7 +269,8 @@ logging.basicConfig(filename=logFile,
 	filemode='a',
 	format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
 	datefmt='%H:%M:%S',
-	level=logging.ERROR)
+	level=logging.DEBUG)
+logging.info('LOGGING STARTED')
 
 parser = argparse.ArgumentParser('Upload HLS (m3u8) live stream to SkyLive')
 parser.add_argument('--record_folder', help='Record folder, where m3u8 and ts files are (will be) located (default: record_here)')
