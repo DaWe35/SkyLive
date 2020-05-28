@@ -109,7 +109,7 @@ def isPlaylistFinished(recordFolder):
 		else:
 			return False
 
-def updateDisplay(window, filearr, symbols):
+def updateDisplay(filearr, symbols):
 	print('Status symbols:\n')
 	symbarray = []
 	idx = 0
@@ -239,7 +239,7 @@ def worker():
 	while True:
 		nextFile = os.path.join(recordFolder, "live" + str(nextStreamFilename) + ".ts")
 		nextAfterFile = os.path.join(recordFolder, "live" + str(nextStreamFilename + 1) + ".ts")
-		updateDisplay(window, filearr, symbols)
+		updateDisplay(filearr, symbols)
 		if concurrent_uploads < 10 and ( os.path.isfile(nextAfterFile) or ( isPlaylistFinished(recordFolder) and os.path.isfile(nextFile) ) ):
 			filearr.append(VideoFile(nextStreamFilename + 1))
 			filearr[nextStreamFilename].status = 'upload queued'
