@@ -36,6 +36,9 @@ portals = [
     'https://skynet.cloudloop.io',
     'https://siacdn.com',
     'https://siasky.net',
+    'https://germany.siasky.net',
+    'https://helsinki.siasky.net',
+    'https://us-west.siasky.net/',
 ]
 results = []
 
