@@ -1,7 +1,5 @@
 <head>
-    <link href="https://unpkg.com/video.js@6.7.1/dist/video-js.css" rel="stylesheet">
-    <script src="https://unpkg.com/video.js@6.7.1/dist/video.js"></script>
-    <script src="https://unpkg.com/@videojs/http-streaming@0.9.0/dist/videojs-http-streaming.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link href="assets/vsg-skin.css" rel="stylesheet">
 
 </head>
@@ -18,9 +16,12 @@
     </div>
     <a href="<?= URL ?>" class="logo"><button class="play"></button> &nbsp; SkyLive</a>
     <div class="player-container">
-        <video id="my_video_1" class="video-js vjs-fluid" controls preload="auto" poster="<?= image_print($stream['streamid'], 1920) ?>" data-setup='{}'>
-            <source id="src" src="stream.m3u8?streamid=<?= htmlspecialchars($_GET['s']) ?>&portal=<?= $portal ?>" type="application/x-mpegURL">
-        </video>
+        <div id="ios_warning">
+            Sorry, IOS  does not support HLS streaming.<br>
+            <a href="vlc-x-callback://x-callback-url/stream?url=<?= $stream_url ?>">Open in VLC</a><br>
+            If it's not working, open VLC and play this network file: <?= URL . $stream_url ?>
+        </div>
+        <video id="my_video_1" controls preload="auto" poster="<?= image_print($stream['streamid'], 1920) ?>">Sorry, HTML5 video is not supported in your browser</video>
     </div><!--
 --><div class="minnit-chat-container"><!--
     --><iframe id="chat" src="https://minnit.chat/SkyLive?embed&&nickname=" allowTransparency="true"></iframe><br><a href="https://minnit.chat/SkyLive" target="_blank">HTML5 Chatroom powered by Minnit Chat</a>
@@ -45,19 +46,31 @@
         console.log('Using portal: ' + portal)
         // $('#src').attr("src", "<?= URL ?>stream.php?portal=" + portal + "&streamid=" + streamid)
 
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (iOS) {
+            $('#ios_warning').css('display', 'initial')
+        }
 
-        var overrideNative = true;
-
-        var player = videojs('my_video_1', {
-            html5: {
-                hls: {
-                    overrideNative: overrideNative
-                },
-                nativeVideoTracks: !overrideNative,
-                nativeAudioTracks: !overrideNative,
-                nativeTextTracks: !overrideNative
-            }
-        });
+        var video = document.getElementById('my_video_1');
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource('<?= $stream_url ?>');
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+        }
+        // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+        // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element through the `src` property.
+        // This is using the built-in support of the plain video element, without using hls.js.
+        // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
+        // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = '<?= $stream_url ?>';
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        }
     </script>
         
 
@@ -66,9 +79,6 @@
         <hover></hover>
         <span>Toggle chat</span>
     </button>
-
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 
     <script>
 

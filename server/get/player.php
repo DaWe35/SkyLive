@@ -15,4 +15,5 @@ $stmt = null;
 
 $pagetitle = $stream['title'];
 $ogimage = image_print($stream['streamid'], 600);
+$stream_url = 'stream.m3u8?streamid=' . htmlspecialchars($_GET['s']) . '&portal=' . $portal;
 include 'model/display.php';

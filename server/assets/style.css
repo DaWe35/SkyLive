@@ -142,6 +142,10 @@ canvas{margin: 0;padding: 0;display:block;position:absolute;margin-top:-30px;}
 	}
 }
 
+#ios_warning {
+	display: none;
+}
+
 #chat {
 	display: none;
 	border: none;
