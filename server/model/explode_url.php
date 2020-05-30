@@ -1,4 +1,9 @@
-<?php function exploge_geturl($geturl) {
+<?php
+function endsWith($haystack, $needle) {
+    return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+}
+
+function exploge_geturl($geturl) {
 
 	$expgeturl = explode("/", $geturl);
 	$geturl = preg_replace('/[^a-z0-9\.]/', '', strtolower($geturl));
@@ -8,7 +13,10 @@
 	}
 
 	if (isset($expgeturl[0]) && $expgeturl[0] != '') {
-		define("PAGE",$expgeturl[0]);
+		if (endsWith($expgeturl[0], '.m3u8')) {
+			$expgeturl[0] = substr_replace($expgeturl[0], "", -5);
+		}
+		define("PAGE", $expgeturl[0]);
 	} else if (isset($_GET['page'])) {
 		define("PAGE", $_GET['page']);
 	} else {

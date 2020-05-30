@@ -22,7 +22,7 @@
     <a href="<?= URL ?>" class="logo">SkyLive</a>
     <div class="player-container">
         <video-js id="my_video_1" class="vjs-default-skin vjs-16-9" controls preload="auto" width="70%">
-            <source id="src" src="stream?streamid=<?= htmlspecialchars($_GET['s']) ?>&portal=<?= $portal ?>" type="application/x-mpegURL">
+            <source id="src" src="stream.m3u8?streamid=<?= htmlspecialchars($_GET['s']) ?>&portal=<?= $portal ?>" type="application/x-mpegURL">
         </video-js>
     </div><!--
 --><div class="minnit-chat-container"><!--
