@@ -1,14 +1,11 @@
-<!DOCTYPE html>
 <head>
-    <title>SkyLive 0.85 beta</title>
-    <meta name="viewport" content="width=device-width, user-scalable=yes" />
-    <meta charset="utf8"/>
     <link href="https://unpkg.com/video.js@6.7.1/dist/video-js.css" rel="stylesheet">
     <script src="https://unpkg.com/video.js@6.7.1/dist/video.js"></script>
     <script src="https://unpkg.com/@videojs/http-streaming@0.9.0/dist/videojs-http-streaming.js"></script>
+    <link href="assets/vsg-skin.css" rel="stylesheet">
 
 </head>
-<body class="player">
+<body class="player chatmode">
     <div id="portal-switcher">
         <input id="check01" type="checkbox" name="menu" />
         <label for="check01" class="noselect" style="opacity: 0.7;">
@@ -19,11 +16,11 @@
             <li id="loading_portals"><a href="#">Loading portals...</a></li>
         </ul>
     </div>
-    <a href="<?= URL ?>" class="logo">SkyLive</a>
+    <a href="<?= URL ?>" class="logo"><button class="play"></button> &nbsp; SkyLive</a>
     <div class="player-container">
-        <video-js id="my_video_1" class="vjs-default-skin vjs-16-9" controls preload="auto" width="70%">
+        <video id="my_video_1" class="video-js vjs-fluid" controls preload="auto" poster="<?= image_print($stream['streamid'], 1920) ?>" data-setup='{}'>
             <source id="src" src="stream.m3u8?streamid=<?= htmlspecialchars($_GET['s']) ?>&portal=<?= $portal ?>" type="application/x-mpegURL">
-        </video-js>
+        </video>
     </div><!--
 --><div class="minnit-chat-container"><!--
     --><iframe id="chat" src="https://minnit.chat/SkyLive?embed&&nickname=" allowTransparency="true"></iframe><br><a href="https://minnit.chat/SkyLive" target="_blank">HTML5 Chatroom powered by Minnit Chat</a>
@@ -54,13 +51,11 @@
         var player = videojs('my_video_1', {
             html5: {
                 hls: {
-                overrideNative: overrideNative
+                    overrideNative: overrideNative
                 },
                 nativeVideoTracks: !overrideNative,
                 nativeAudioTracks: !overrideNative,
-                nativeTextTracks: !overrideNative,
-                autoplay: true,
-                muted: true
+                nativeTextTracks: !overrideNative
             }
         });
     </script>
@@ -77,7 +72,7 @@
 
     <script>
 
-    chatmode = 0
+    chatmode = 1
 
     function switchMode() {
         if (chatmode == 0) {

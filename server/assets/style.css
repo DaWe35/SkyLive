@@ -128,10 +128,11 @@ canvas{margin: 0;padding: 0;display:block;position:absolute;margin-top:-30px;}
 
 @media (min-width: 900px) {
 	.player-container {
-		width: 80%;
+		width: 70%;
 	}
 	.chatmode #chat {
 		width: 20% !important;
+		height: 84vh;
 	}
 	#portal-switch-text-long {
 		display: block;

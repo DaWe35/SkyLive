@@ -8,6 +8,7 @@ if (!isset($displayPage)) {
 <html lang="en">
     <head>
         <title><?= isset($pagetitle) ? $pagetitle : 'SkyLive' ?></title>
+        <meta property="og:image" content="<?= isset($ogimage) ? $ogimage : URL . 'assets/logos/logo1.jpg' ?>" />
         <?php include "view/include/head.php"; ?>
     </head>
     <body>
