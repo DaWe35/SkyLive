@@ -81,11 +81,17 @@
             document.getElementById("loading_portals").remove()
             let portals = JSON.parse(this.responseText);
             portals.forEach(portal => {
-                url = "/player?s=<?= htmlspecialchars($_GET['s']) ?>&portal=" + portal.link
-                document.getElementById("portal_list").innerHTML += '<li><a href="' + url + '">' + portal.name + '</a></li>'
-            });
+                portalSum = 0
+                portal.files.forEach(filenumb => {
+                    portalSum += filenumb
+                })
+                if (portalSum != 0) {
+                    url = "/player?s=<?= htmlspecialchars($_GET['s']) ?>&portal=" + portal.link
+                    document.getElementById("portal_list").innerHTML += '<li><a href="' + url + '">' + portal.name + '</a></li>'
+                }
+            })
         }
-    };
+    }
     xhttp.open("GET", "https://siastats.info/dbs/skynet_current.json", true);
     xhttp.send();
 
