@@ -25,65 +25,45 @@
     </div><!--
 --><div class="minnit-chat-container"><!--
     --><iframe id="chat" src="https://minnit.chat/SkyLive?embed&&nickname=" allowTransparency="true"></iframe><br><a href="https://minnit.chat/SkyLive" target="_blank">HTML5 Chatroom powered by Minnit Chat</a>
-    </div>
-    <script>
-        var urlParams = new URLSearchParams(window.location.search);
-
-        if (urlParams.has('stream') && urlParams.has('stream') != '') {
-            var streamid = urlParams.get('stream'); // "edit"
-        } else {
-            var streamid = 'skylive'
-        }
-        if (urlParams.has('portal') && urlParams.has('portal') != '') {
-            var portal = urlParams.get('portal'); // "edit"
-        } else {
-            var portal   = window.location.origin;
-        }
-        
-        if (portal == null || portal == 'https://skylive.local' || portal == 'http://skylive.local' || portal == 'https://localhost' || portal == 'http://localhost') {
-            portal = 'https://siasky.net'
-        }
-        console.log('Using portal: ' + portal)
-        // $('#src').attr("src", "<?= URL ?>stream.php?portal=" + portal + "&streamid=" + streamid)
-
-        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        if (iOS) {
-            $('#ios_warning').css('display', 'initial')
-        }
-
-        var video = document.getElementById('my_video_1');
-        if (Hls.isSupported()) {
-            var hls = new Hls();
-            hls.loadSource('<?= $stream_url ?>');
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play();
-            });
-        }
-        // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
-        // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element through the `src` property.
-        // This is using the built-in support of the plain video element, without using hls.js.
-        // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
-        // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
-        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = '<?= $stream_url ?>';
-            video.addEventListener('loadedmetadata', function() {
-                video.play();
-            });
-        }
-    </script>
-        
+    </div>        
 
     <button onclick="switchMode()" class="BT-OH-BR-R6-NF-FH-FP-PT" id="button">
         <canvas id="canvas"></canvas> 
         <hover></hover>
         <span>Toggle chat</span>
     </button>
-
+    
     <script>
+    
+    // Display warning on IOS
+    var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (iOS) {
+        $('#ios_warning').css('display', 'initial')
+    }
+
+    // Create HLS video element
+    var video = document.getElementById('my_video_1');
+    if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource('<?= $stream_url ?>');
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play();
+        });
+    }
+    // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
+    // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element through the `src` property.
+    // This is using the built-in support of the plain video element, without using hls.js.
+    // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
+    // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
+    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = '<?= $stream_url ?>';
+        video.addEventListener('loadedmetadata', function() {
+            video.play();
+        });
+    }
 
     chatmode = 1
-
     function switchMode() {
         if (chatmode == 0) {
             $('body').addClass('chatmode')
