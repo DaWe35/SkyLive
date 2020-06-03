@@ -131,7 +131,7 @@ def updateDisplay(filearr, symbols):
 	length = ['Length']
 	uptime = ['Upload time']
 	terminalColumns, terminalRows = shutil.get_terminal_size()
-	showRows = int(terminalColumns/6) - 3
+	showRows = int(terminalColumns/7) - 3
 	ran = len(filearr) if (len(filearr) < showRows) else showRows
 	for i in range(ran):
 		ind = -ran+i
