@@ -2,8 +2,6 @@ import time
 from siaskynet import Skynet
 import os
 
-import traceback
-
 def time_to_str(value):
 	if value == 20:
 		time = 'timeout'
