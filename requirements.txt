@@ -4,5 +4,4 @@ ffmpeg_python==0.2.0
 siaskynet==1.0.2
 youtube_dl==2020.5.3
 ffmpeg-python==0.2.0
-eventlet==0.25.2
 opencv-python
