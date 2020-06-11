@@ -25,7 +25,7 @@ if (!isset($stream['streamid'])) {
 if (isset($_GET['portal']) && !empty($_GET['portal'])) {
     $portal = filter_var($_GET['portal'], FILTER_SANITIZE_URL);
 } else {
-    $portal = 'https://siasky.net';
+    $portal = 'https://helsinki.siasky.net';
 }
 
 ?>
