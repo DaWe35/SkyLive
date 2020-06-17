@@ -38,7 +38,8 @@ def skynet_push(filePath, portal):
 
 	opts = type('obj', (object,), {
 		'portal_url': portal,
-		'timeout': 60
+		'timeout': 60,
+		'timeout_seconds': 60
 	})
 
 	try:
