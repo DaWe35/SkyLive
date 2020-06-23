@@ -1,10 +1,14 @@
 # Skylive
 
-Live HLS video streams hosted on Skynet. SkyLive is under heavy development, streaming will be much more easyer in some weeks for non-tech users.
+SkyLive provides non-custodial streaming solution, so you can broadcast live videos without a centralized server. This repo contains command line, however, we have some other user-friendly stuff here:
+
+[Watch SkyLive](https://skylive.coolhd.hu)
+
+[Stream on SkyLive](https://github.com/DaWe35/SkyLive-GUI)
+
+[Host another SkyLive webportal](https://github.com/DaWe35/SkyLive-webportal)
 
 [Check out our roadmap](https://github.com/DaWe35/SkyLive/projects/3)
-
-Explore streams: https://skylive.coolhd.hu
 
 # How to start stream
 
