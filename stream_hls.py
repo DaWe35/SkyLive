@@ -9,7 +9,8 @@ from siaskynet import Skynet
 import subprocess
 from tabulate import tabulate
 from threading import Thread
-import timeimport functools
+import time
+import functools
 print = functools.partial(print, flush=True)
 
 

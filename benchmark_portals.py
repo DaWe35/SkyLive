@@ -1,6 +1,7 @@
 import time
 from siaskynet import Skynet
-import osimport functools
+import os
+import functools
 print = functools.partial(print, flush=True)
 
 def time_to_str(value):
