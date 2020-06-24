@@ -6,7 +6,6 @@ import cv2
 import requests
 import shutil
 from siaskynet import Skynet
-import subprocess
 from tabulate import tabulate
 from threading import Thread
 import time
