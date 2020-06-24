@@ -4,7 +4,8 @@ import ffmpeg
 import argparse
 import atexit
 import os
-import shutil
+import shutilimport functools
+print = functools.partial(print, flush=True)
 
 def touchDir(dir):
     if (os.path.isdir(dir)):

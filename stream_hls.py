@@ -9,7 +9,8 @@ from siaskynet import Skynet
 import subprocess
 from tabulate import tabulate
 from threading import Thread
-import time
+import timeimport functools
+print = functools.partial(print, flush=True)
 
 
 def runBash(command):
