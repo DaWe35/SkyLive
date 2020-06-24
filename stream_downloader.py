@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 import youtube_dl
 import ffmpeg
 import argparse
@@ -21,18 +21,24 @@ def rmdir(dir):
 
 parser = argparse.ArgumentParser(description="Restream Youtube/Twitch live to SkyLive")
 parser.add_argument('--url', help='Video url (for example https://www.youtube.com/watch?v=ASD123', required=True)
+parser.add_argument('--record_folder', help='The stream will be downloaded here, and uploaded from this folder')
 # parser.add_argument('--token', help='SkyLive live stream token. You need to create a new stream on https://skylive.coolhd.hu', required=True)
 args = parser.parse_args()
 
 # create temp folder
 projectPath = os.path.dirname(os.path.abspath(__file__))
-dirNumb = 0
-while True:
-    recordFolder = os.path.join(projectPath, "temp_restream_" + str(dirNumb))
-    recordFile = os.path.join(projectPath, "temp_restream_" + str(dirNumb), 'live.m3u8')
-    if touchDir(recordFolder):
-        break
-    dirNumb += 1
+if args.record_folder:
+    recordFolder = os.path.join(projectPath, str(args.record_folder))
+    recordFile = os.path.join(projectPath, str(args.record_folder), 'live.m3u8')
+    touchDir(recordFolder)
+else:
+    dirNumb = 0
+    while True:
+        recordFolder = os.path.join(projectPath, "temp_restream_" + str(dirNumb))
+        recordFile = os.path.join(projectPath, "temp_restream_" + str(dirNumb), 'live.m3u8')
+        if touchDir(recordFolder):
+            break
+        dirNumb += 1
 
 def exit_handler():
     print('Removing', recordFolder, 'folder...')
