@@ -114,8 +114,8 @@ def isPlaylistFinished(recordFolder):
 			return False
 
 def updateDisplay(filearr, symbols):
-	print('\n\n\n\n\n\n\n\n\n')
-	print('Status symbols:\n')
+	print_str = '\n\n\n\n\n\n\n\n\n'
+	print_str += 'Status symbols:\n'
 	symbarray = []
 	idx = 0
 	
@@ -123,7 +123,7 @@ def updateDisplay(filearr, symbols):
 		symbarray.append([value, key])
 		idx += 1
 	table = (tabulate(symbarray, headers=['symbol', 'status'], tablefmt='orgtbl'))
-	print(table + '\n\n\n')
+	print_str += table + '\n\n\n'
 
 	file = ['File']
 	status = ['Status']
@@ -149,7 +149,8 @@ def updateDisplay(filearr, symbols):
 			uptime.append(str(uploadTime) + 's')
 
 	table = (tabulate([file, status, length, uptime], tablefmt='orgtbl'))
-	print(table)
+	print_str += table
+	print(print_str)
 
 def share(fileId, filearr):
 	global m3u8_list_upload_token, is_first_chunk
