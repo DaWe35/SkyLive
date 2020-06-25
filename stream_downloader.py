@@ -9,11 +9,11 @@ import functools
 print = functools.partial(print, flush=True)
 
 def touchDir(dir):
-    if (os.path.isdir(dir)):
-        return False
-    else:
-        os.mkdir(dir)
-        return True
+	if (os.path.isdir(dir)):
+		return False
+	else:
+		os.mkdir(dir)
+		return True
 
 def rmdir(dir):
 	if os.path.isdir(dir):
@@ -26,42 +26,49 @@ parser.add_argument('--record_folder', help='The stream will be downloaded here,
 args = parser.parse_args()
 
 # create temp folder
-projectPath = os.path.dirname(os.path.abspath(__file__))
+projectPath = os.path.expanduser( os.path.join('~', '.SkyLive'))
+touchDir(projectPath)
+
 if args.record_folder:
-    recordFolder = os.path.join(projectPath, str(args.record_folder))
-    recordFile = os.path.join(projectPath, str(args.record_folder), 'live.m3u8')
-    touchDir(recordFolder)
+	if (os.path.isabs(args.record_folder)):
+		recordFolder = args.record_folder
+	else:
+		recordFolder = os.path.join(projectPath, args.record_folder)
+	recordFile = os.path.join(projectPath, str(args.record_folder), 'live.m3u8')
 else:
-    dirNumb = 0
-    while True:
-        recordFolder = os.path.join(projectPath, "temp_restream_" + str(dirNumb))
-        recordFile = os.path.join(projectPath, "temp_restream_" + str(dirNumb), 'live.m3u8')
-        if touchDir(recordFolder):
-            break
-        dirNumb += 1
+	dirNumb = 0
+	while True:
+		recordFolder = os.path.join(projectPath, "temp_restream_" + str(dirNumb))
+		recordFile = os.path.join(projectPath, "temp_restream_" + str(dirNumb), 'live.m3u8')
+		if touchDir(recordFolder):
+			break
+		dirNumb += 1
+
+touchDir(recordFolder)
 
 def exit_handler():
-    print('Removing', recordFolder, 'folder...')
-    rmdir(recordFolder)
+	pass
+	# print('Removing', recordFolder, 'folder...')
+	# rmdir(recordFolder)
 
 atexit.register(exit_handler)
 
 def get_youtube_m3u8(video_url):
-    ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'})
+	ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'})
 
-    with ydl:
-        result = ydl.extract_info(
-            video_url,
-            download=False # We just want to extract the info
-        )
+	with ydl:
+		result = ydl.extract_info(
+			video_url,
+			download=False # We just want to extract the info
+		)
 
-    if 'entries' in result:
-        # Can be a playlist or a list of videos
-        video = result['entries'][0]
-    else:
-        # Just a video
-        video = result
-    return video['url']
+	if 'entries' in result:
+		# Can be a playlist or a list of videos
+		video = result['entries'][0]
+	else:
+		# Just a video
+		video = result
+	return video['url']
 
 
 m3u8 = get_youtube_m3u8(args.url)

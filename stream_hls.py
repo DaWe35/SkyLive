@@ -258,7 +258,8 @@ def worker():
 	
 
 concurrent_uploads = 0
-projectPath = os.path.dirname(os.path.abspath(__file__))
+projectPath = os.path.expanduser( os.path.join('~', '.SkyLive'))
+touchDir(projectPath)
 is_first_chunk = 1
 
 logFile = os.path.join(projectPath, "error.log")
