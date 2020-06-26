@@ -20,6 +20,10 @@ def rmdir(dir):
 	if os.path.isdir(dir):
 		shutil.rmtree(dir)
 
+# create temp folder
+projectPath = os.path.expanduser( os.path.join('~', '.SkyLive'))
+touchDir(projectPath)
+
 logFile = os.path.join(projectPath, "stream_downloader.log")
 logging.basicConfig(filename=logFile,
 	filemode='a',
@@ -34,26 +38,30 @@ parser.add_argument('--record_folder', help='The stream will be downloaded here,
 # parser.add_argument('--token', help='SkyLive live stream token. You need to create a new stream on https://skylive.coolhd.hu', required=True)
 args = parser.parse_args()
 
-# create temp folder
-projectPath = os.path.expanduser( os.path.join('~', '.SkyLive'))
-touchDir(projectPath)
-
+# get record folder
 if args.record_folder:
 	if (os.path.isabs(args.record_folder)):
 		recordFolder = args.record_folder
 	else:
 		recordFolder = os.path.join(projectPath, args.record_folder)
-	recordFile = os.path.join(projectPath, str(args.record_folder), 'live.m3u8')
 else:
 	dirNumb = 0
 	while True:
 		recordFolder = os.path.join(projectPath, "temp_restream_" + str(dirNumb))
-		recordFile = os.path.join(projectPath, "temp_restream_" + str(dirNumb), 'live.m3u8')
 		if touchDir(recordFolder):
 			break
 		dirNumb += 1
 
 touchDir(recordFolder)
+
+# get record file
+fileNumb = 1
+while True:
+	recordFile = os.path.join(recordFolder, str(fileNumb) + '_.m3u8')
+	if (os.path.exists(recordFile)):
+		fileNumb += 1
+	else:
+		break
 
 def exit_handler():
 	pass
