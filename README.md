@@ -90,6 +90,14 @@ Start uploader:
 
 # Other tricks, notes
 
+### Build
+
+`pyinstaller --onefile stream_hls.py --hidden-import=pkg_resources.py2_warn`
+
+`pyinstaller --onefile stream_downloader.py `
+
+`pyinstaller --onefile benchmark_portals.py`
+
 ### Export HLS to mp4
 
 After the stream, you can easily convert the .ts chunks into one mp4 file:
