@@ -1,3 +1,6 @@
+import functools
+print = functools.partial(print, flush=True)
+print('Initializing...')
 import argparse
 import config
 import logging
@@ -9,8 +12,6 @@ from siaskynet import Skynet
 from tabulate import tabulate
 from threading import Thread
 import time
-import functools
-print = functools.partial(print, flush=True)
 
 
 def runBash(command):
@@ -262,7 +263,7 @@ projectPath = os.path.expanduser( os.path.join('~', '.SkyLive'))
 touchDir(projectPath)
 is_first_chunk = 1
 
-logFile = os.path.join(projectPath, "error.log")
+logFile = os.path.join(projectPath, "stream_hls.log")
 logging.basicConfig(filename=logFile,
 	filemode='a',
 	format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',

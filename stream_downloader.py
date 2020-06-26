@@ -1,12 +1,13 @@
-# from __future__ import unicode_literals
+print('Initializing...')
+import functools
+print = functools.partial(print, flush=True)
 import youtube_dl
 import ffmpeg
 import argparse
 import atexit
 import os
 import shutil
-import functools
-print = functools.partial(print, flush=True)
+import logging
 
 def touchDir(dir):
 	if (os.path.isdir(dir)):
@@ -72,7 +73,8 @@ def get_youtube_m3u8(video_url):
 
 
 m3u8 = get_youtube_m3u8(args.url)
+logging.debug('Found m3u8 file: ' + m3u8)
 input_stream = ffmpeg.input(m3u8)
+logging.debug('Recording file: ' + recordFile)
 output_stream = ffmpeg.output(input_stream, recordFile, vcodec="copy", acodec="copy", hls_time=10)
 ffmpeg.run(output_stream)
-
