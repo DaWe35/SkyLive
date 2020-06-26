@@ -20,6 +20,14 @@ def rmdir(dir):
 	if os.path.isdir(dir):
 		shutil.rmtree(dir)
 
+logFile = os.path.join(projectPath, "stream_downloader.log")
+logging.basicConfig(filename=logFile,
+	filemode='a',
+	format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+	datefmt='%H:%M:%S',
+	level=logging.DEBUG)
+logging.info('LOGGING STARTED')
+
 parser = argparse.ArgumentParser(description="Restream Youtube/Twitch live to SkyLive")
 parser.add_argument('--url', help='Video url (for example https://www.youtube.com/watch?v=ASD123', required=True)
 parser.add_argument('--record_folder', help='The stream will be downloaded here, and uploaded from this folder')
