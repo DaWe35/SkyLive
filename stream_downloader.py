@@ -2,12 +2,12 @@ print('Initializing...')
 import functools
 print = functools.partial(print, flush=True)
 import youtube_dl
-import ffmpeg
 import argparse
 import atexit
 import os
 import shutil
 import logging
+import platform
 
 def touchDir(dir):
 	if (os.path.isdir(dir)):
@@ -19,6 +19,31 @@ def touchDir(dir):
 def rmdir(dir):
 	if os.path.isdir(dir):
 		shutil.rmtree(dir)
+	
+def runBash(command):
+	return os.system(command)
+
+def exit_handler():
+	print('Removing', recordFolder, 'folder...')
+	rmdir(recordFolder)
+atexit.register(exit_handler)
+
+def get_youtube_m3u8(video_url):
+	ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'})
+
+	with ydl:
+		result = ydl.extract_info(
+			video_url,
+			download=False # We just want to extract the info
+		)
+
+	if 'entries' in result:
+		# Can be a playlist or a list of videos
+		video = result['entries'][0]
+	else:
+		# Just a video
+		video = result
+	return video['url']
 
 # create temp folder
 projectPath = os.path.expanduser( os.path.join('~', '.SkyLive'))
@@ -63,34 +88,39 @@ while True:
 	else:
 		break
 
-def exit_handler():
-	pass
-	# print('Removing', recordFolder, 'folder...')
-	# rmdir(recordFolder)
-
-atexit.register(exit_handler)
-
-def get_youtube_m3u8(video_url):
-	ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'})
-
-	with ydl:
-		result = ydl.extract_info(
-			video_url,
-			download=False # We just want to extract the info
-		)
-
-	if 'entries' in result:
-		# Can be a playlist or a list of videos
-		video = result['entries'][0]
-	else:
-		# Just a video
-		video = result
-	return video['url']
-
 
 m3u8 = get_youtube_m3u8(args.url)
 logging.debug('Found m3u8 file: ' + m3u8)
-input_stream = ffmpeg.input(m3u8)
+
+# if ffmpeg is not installed
+if (runBash('ffmpeg -version') != 0):
+	# check .SkyLive
+	# if not in .SkyLive
+		system = platform.system()
+		machine = platform.machine()
+		if system == 'Windows':
+			# https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-4.3-win64-static.zip
+			# bin/ffmpeg.exe
+		elif system == 'Linux':
+			if machine == 'AMD64' or machine == 'x86_64':
+				# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+			elif machine == 'i686':
+				# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz
+			elif machine == 'arm':
+				# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-arm64-static.tar.xz
+			else:
+				print('No ffmpeg found for your architecture (' + machine + '), please install ffmpeg manually!')
+				logging.error('No ffmpeg found for architecture: ' + machine)
+		elif system == 'Darwin':
+			# https://evermeet.cx/ffmpeg/ffmpeg-4.3.7z
+			# bin/ffmpeg_darwin
+		else:
+			print('No ffmpeg found for your system (' + system + '), please install ffmpeg manually!')
+			logging.error('No ffmpeg found for system: ' + system)
+
+
+
+""" input_stream = ffmpeg.input(m3u8)
 logging.debug('Recording file: ' + recordFile)
 output_stream = ffmpeg.output(input_stream, recordFile, vcodec="copy", acodec="copy", hls_time=10)
-ffmpeg.run(output_stream)
+ffmpeg.run(output_stream) """

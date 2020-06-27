@@ -14,10 +14,6 @@ from tabulate import tabulate
 from threading import Thread
 import time
 
-
-def runBash(command):
-	os.system(command)
-
 def touchDir(dir, strict = False):
 	if (strict == True and os.path.isdir(dir)):
 		raise Exception('Folder already exists: ' + dir)
