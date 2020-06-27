@@ -1,4 +1,4 @@
-# Skylive
+# Skylive-CLI
 
 SkyLive provides non-custodial streaming solution, so you can broadcast live videos without a centralized server. This repo contains command line, however, we have some other user-friendly stuff here:
 
@@ -12,9 +12,11 @@ SkyLive provides non-custodial streaming solution, so you can broadcast live vid
 
 # How to start stream
 
+If you are NOT a programmer, [SkyLive-GUI](https://github.com/DaWe35/SkyLive-GUI) will be a better choise :)
+
 - Download & extract the latest binaries from [releases](https://github.com/DaWe35/SkyLive/releases)
 
-- Register a SkyLive account and scheule a new stream.
+- Register a [SkyLive](https://skylive.coolhd.hu) account and scheule a new stream.
 
 - Open command prompt and start the uploader with this command: `"C:\\path\to\stream_hls.exe" --record_folder "C:\\path\to\record_here"`
 
@@ -30,15 +32,13 @@ SkyLive provides non-custodial streaming solution, so you can broadcast live vid
 
 - Close stream_hls.exe
 
-- Open https://SkyLive.coolhd.hu/studio and `Finish` the stream (after this, it will be seekable)
+- Open https://SkyLive.coolhd.hu/studio and `Finish` the stream (after this, the video will be seekable)
 
 # Setup OBS:
 
 - Download & config OBS
-
-  TL;DR: use the settings what you see below
   
-  Currently, there is a [bug](https://github.com/obsproject/obs-studio/issues/2500) in OBS, so you can't record more than 14 chunks into m3u8 (tested on Win10 only). It is recommended to try it out on your system, maybe you can record more than 16 chunks (please write your experience [in a comment](https://github.com/obsproject/obs-studio/issues/2500). But while the issue is not fixed, we need to use the custom ffmpeg output:
+  Currently, there is a [bug](https://github.com/obsproject/obs-studio/issues/2500) in OBS, so you can't record more than 14 chunks into m3u8. While the issue is not fixed, we need to use the custom ffmpeg output, so please use the settings what you see below:
   
   ![OBS settings](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_settings.jpg)
 
@@ -50,7 +50,7 @@ SkyLive provides non-custodial streaming solution, so you can broadcast live vid
     
     - File path: *.../Skylive/record_here*
     
-      *This is important, the python script will search for new files in 'record_here'*
+      *You need to pass this folder in the `--record_folder` parameter later.*
     
     - Container format: *hls*
     
@@ -64,29 +64,19 @@ SkyLive provides non-custodial streaming solution, so you can broadcast live vid
     
       *Saves the CPU. Available presets: ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow, placebo*
       
-      *Try out some, but be careful: if you see this warning, viewers will experience buffering*
-      
-      ![OBS recording overloaded](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/overload.jpg)
-    
-    - Under Settings -> Advanced -> Recording, change the Filename Formatting to `live` - that's enough (and important!)
-    
-      ![OBS filename](https://raw.githubusercontent.com/DaWe35/Skylive/master/docs/obs_filename.jpg)
+      *Try out some, but be careful: if encoding is overloaded, viewers will experience buffering*
 
 # Restream m3u8 from Youtube/Twitch
 
 You can restream any public Youtube/Twitch stream to SkyLive without any transcoding or screen recording. The `stream_downloader.py` will download live stream on-demand, so you can re-upload it to SkyLive with `stream_hls.py`.
 
-Usage: 
-
-`cd C:\\path\to\SkyLive`
-
 Start downloader:
 
-`stream_downloader.exe --url https://www.youtube.com/watch?v=kG5araSvvLI`
+`stream_downloader.exe --record_folder "C:\\path\to" --url https://www.youtube.com/watch?v=kG5araSvvLI`
 
 Start uploader:
 
-`"C:\\path\to\stream_hls.exe" --record_folder "C:\\path\to\team_restream_0"`
+`stream_hls.exe --record_folder "C:\\path\to"`
 
 # Other tricks, notes
 
@@ -103,9 +93,3 @@ Start uploader:
 After the stream, you can easily convert the .ts chunks into one mp4 file:
 
 `ffmpeg -i "http://host/folder/input.m3u8" -bsf:a aac_adtstoasc -vcodec copy -c copy output.mp4`
-
-### Optional: setup you own playlist server
-
-- Running a you-own SkyLive portal needs PHP and MySQL. On Windows, I recommend wamp.net. The root directory of the website needs to be the `server` folder.
-- Copy `server/config_default.php` to `server/config.php` and change the settings.
-- Import skylive.sql into MySQL.
