@@ -75,12 +75,6 @@ else:
 
 touchDir(recordFolder)
 
-def exit_handler():
-	global recordFolder
-	print('Removing', recordFolder, 'folder...')
-	rmdir(recordFolder)
-atexit.register(exit_handler)
-
 # get record file
 fileNumb = 1
 while True:
