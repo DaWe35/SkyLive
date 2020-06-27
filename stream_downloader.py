@@ -5,6 +5,7 @@ import youtube_dl
 import argparse
 import atexit
 import os
+import stat
 import shutil
 import logging
 import platform
@@ -109,12 +110,14 @@ else:
 		else:
 			print('No ffmpeg found for your architecture (' + machine + '), please install ffmpeg manually!')
 			logging.error('No ffmpeg found for architecture: ' + machine)
+			exit(1)
 	elif system == 'Darwin':
 		# https://evermeet.cx/ffmpeg/ffmpeg-4.3.7z
 		ffmpeg_filename = 'ffmpeg_darwin'
 	else:
 		print('No ffmpeg found for your system (' + system + '), please install ffmpeg manually!')
 		logging.error('No ffmpeg found for system: ' + system)
+		exit(1)
 
 	ffmpeg_command = os.path.join(projectPath, ffmpeg_filename)
 	if not os.path.isfile(ffmpeg_command):
@@ -123,6 +126,10 @@ else:
 		print("Downloading ffmpeg... Please be patient :)")
 		r = requests.get(url, allow_redirects=True)
 		open(ffmpeg_command, 'wb').write(r.content)
+		if system == 'Linux':
+			st = os.stat(ffmpeg_command)
+			os.chmod(ffmpeg_command, st.st_mode | stat.S_IEXEC)
+		
 	# https://github.com/DaWe35/SkyLive/raw/master/bin/ffmpeg.exe
 		
 	# check .SkyLive
