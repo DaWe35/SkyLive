@@ -8,6 +8,7 @@ import os
 import shutil
 import logging
 import platform
+import requests
 
 def touchDir(dir):
 	if (os.path.isdir(dir)):
@@ -22,11 +23,6 @@ def rmdir(dir):
 	
 def runBash(command):
 	return os.system(command)
-
-def exit_handler():
-	print('Removing', recordFolder, 'folder...')
-	rmdir(recordFolder)
-atexit.register(exit_handler)
 
 def get_youtube_m3u8(video_url):
 	ydl = youtube_dl.YoutubeDL({'outtmpl': '%(id)s%(ext)s'})
@@ -79,6 +75,12 @@ else:
 
 touchDir(recordFolder)
 
+def exit_handler():
+	global recordFolder
+	print('Removing', recordFolder, 'folder...')
+	rmdir(recordFolder)
+atexit.register(exit_handler)
+
 # get record file
 fileNumb = 1
 while True:
@@ -88,39 +90,52 @@ while True:
 	else:
 		break
 
+# if ffmpeg is not installed
+if (runBash('ffmpeg -version') == 0):
+	ffmpeg_command = 'ffmpeg'
+	logging.info("Preinstalled ffmpeg found, using 'ffmpeg' command")
+else:
+	system = platform.system()
+	machine = platform.machine()
+	if system == 'Windows':
+		# https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-4.3-win64-static.zip
+		ffmpeg_filename = 'ffmpeg.exe'
+	elif system == 'Linux':
+		if machine == 'AMD64' or machine == 'x86_64':
+			# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+			ffmpeg_filename = 'ffmpeg_linux_amd64'
+		elif machine == 'i686':
+			# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz
+			ffmpeg_filename = 'ffmpeg_linux_i686'
+		elif machine == 'arm':
+			# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-arm64-static.tar.xz
+			ffmpeg_filename = 'ffmpeg_linux_arm64'
+		else:
+			print('No ffmpeg found for your architecture (' + machine + '), please install ffmpeg manually!')
+			logging.error('No ffmpeg found for architecture: ' + machine)
+	elif system == 'Darwin':
+		# https://evermeet.cx/ffmpeg/ffmpeg-4.3.7z
+		ffmpeg_filename = 'ffmpeg_darwin'
+	else:
+		print('No ffmpeg found for your system (' + system + '), please install ffmpeg manually!')
+		logging.error('No ffmpeg found for system: ' + system)
+
+	ffmpeg_command = os.path.join(projectPath, ffmpeg_filename)
+	if not os.path.isfile(ffmpeg_command):
+		url = 'https://github.com/DaWe35/SkyLive/raw/master/bin/' + ffmpeg_filename
+		logging.info("No ffmpeg found, downlaoding from " + url)
+		print("Downloading ffmpeg... Please be patient :)")
+		r = requests.get(url, allow_redirects=True)
+		open(ffmpeg_command, 'wb').write(r.content)
+	# https://github.com/DaWe35/SkyLive/raw/master/bin/ffmpeg.exe
+		
+	# check .SkyLive
+	# if not in .SkyLive
 
 m3u8 = get_youtube_m3u8(args.url)
 logging.debug('Found m3u8 file: ' + m3u8)
 
-# if ffmpeg is not installed
-if (runBash('ffmpeg -version') != 0):
-	# check .SkyLive
-	# if not in .SkyLive
-		system = platform.system()
-		machine = platform.machine()
-		if system == 'Windows':
-			# https://ffmpeg.zeranoe.com/builds/win64/static/ffmpeg-4.3-win64-static.zip
-			# bin/ffmpeg.exe
-		elif system == 'Linux':
-			if machine == 'AMD64' or machine == 'x86_64':
-				# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
-			elif machine == 'i686':
-				# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz
-			elif machine == 'arm':
-				# https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-arm64-static.tar.xz
-			else:
-				print('No ffmpeg found for your architecture (' + machine + '), please install ffmpeg manually!')
-				logging.error('No ffmpeg found for architecture: ' + machine)
-		elif system == 'Darwin':
-			# https://evermeet.cx/ffmpeg/ffmpeg-4.3.7z
-			# bin/ffmpeg_darwin
-		else:
-			print('No ffmpeg found for your system (' + system + '), please install ffmpeg manually!')
-			logging.error('No ffmpeg found for system: ' + system)
+ffresp = runBash('ffmpeg -i ' + m3u8 + ' -c copy -hls_time 10 ' + recordFile)
 
-
-
-""" input_stream = ffmpeg.input(m3u8)
-logging.debug('Recording file: ' + recordFile)
-output_stream = ffmpeg.output(input_stream, recordFile, vcodec="copy", acodec="copy", hls_time=10)
-ffmpeg.run(output_stream) """
+if (ffresp != 0):
+	logging.error('ffmpeg exited with code ' + str(ffresp))
