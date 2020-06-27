@@ -84,6 +84,8 @@ while True:
 	else:
 		break
 
+open(recordFile, 'a').close()
+
 # if ffmpeg is not installed
 if (runBash('ffmpeg -version') == 0):
 	ffmpeg_command = 'ffmpeg'
