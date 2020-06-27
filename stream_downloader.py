@@ -131,7 +131,7 @@ else:
 m3u8 = get_youtube_m3u8(args.url)
 logging.debug('Found m3u8 file: ' + m3u8)
 
-ffresp = runBash('ffmpeg -i ' + m3u8 + ' -c copy -hls_time 10 ' + recordFile)
+ffresp = runBash(ffmpeg_command + ' -i ' + m3u8 + ' -c copy -hls_time 10 ' + recordFile)
 
 if (ffresp != 0):
 	logging.error('ffmpeg exited with code ' + str(ffresp))
