@@ -98,6 +98,8 @@ def chech_ts(recordFolder):
 def isPlaylistFinished(recordFolder):
 	global stream_filename
 	playlistFile = os.path.join(recordFolder, stream_filename + ".m3u8")
+	if (os.stat(playlistFile).st_size == 0):
+		return False
 	with open(playlistFile, 'r') as f:
 		lines = f.read().splitlines()
 		last_line = lines[-1]
