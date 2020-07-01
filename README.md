@@ -18,7 +18,7 @@ If you are NOT a programmer, [SkyLive-GUI](https://github.com/DaWe35/SkyLive-GUI
 
 - Register a [SkyLive](https://skylive.coolhd.hu) account and scheule a new stream.
 
-- Open command prompt and start the uploader with this command: `"C:\\path\to\stream_hls.exe" --record_folder "C:\\path\to\record_here"`
+- Open command prompt and start the uploader with this command: `"C:\\path\to\stream_hls.exe" --record_folder "C:\\path\to\record_here"`. If you want to save the stream on your computer, use the `--keep_files true` argument.
 
 - Enter the generated stream token from https://SkyLive.coolhd.hu/studio
 
