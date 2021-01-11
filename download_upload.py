@@ -20,7 +20,7 @@ import ffmpeg
 import blurhash
 import time
 
-# Not really sure
+# Creates a directory if not exist
 def touchDir(dir):
 	if (os.path.isdir(dir)):
 		return False
@@ -190,7 +190,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser(description="Restream Youtube/Twitch live to SkyLive")
 	parser.add_argument('--url', help='Video url (for example https://www.youtube.com/watch?v=ASD123', required=True)
 	args = parser.parse_args()
-	if(args.url):
+	if (args.url):
 		finalSkylink = main(args.url)
 		if isinstance(finalSkylink, list) == False:
 			print("final skylink: sia://" + finalSkylink)
